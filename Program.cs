@@ -3,11 +3,12 @@ using Chess;
 
 namespace Chess
 {
-    public class Program
+    public class Chess
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello world");
+            Game game = new Game();
+            game.Start();
         }
     }
 }
