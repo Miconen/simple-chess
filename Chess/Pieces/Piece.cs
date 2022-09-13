@@ -3,7 +3,7 @@ using Chess;
 
 namespace Chess.Pieces
 {
-    public class Piece
+    public abstract class Piece
     {
         public bool color;
         public char nameShort;
