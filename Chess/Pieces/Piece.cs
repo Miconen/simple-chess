@@ -5,11 +5,10 @@ namespace Chess.Pieces
 {
     public class Piece
     {
-        public Piece()
-        {
-        }
+        public bool color;
+        public char nameShort;
 
-        public virtual Move(Move move)
+/*         public virtual Move(Move move)
         {
             Console.WriteLine("Hello world");
         }
@@ -17,6 +16,16 @@ namespace Chess.Pieces
         public bool isValidMove(Move move)
         {
 
+        } */
+
+        public bool IsWhite()
+        {
+            return this.color;
+        }
+
+        public bool IsBlack()
+        {
+            return !this.IsWhite();
         }
     }
 }

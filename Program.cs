@@ -1,5 +1,6 @@
 ﻿using System;
 using Chess;
+using Chess.Rules;
 
 namespace Chess
 {
