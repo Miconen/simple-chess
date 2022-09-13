@@ -5,13 +5,10 @@ namespace Chess.Pieces
 {
     public class Pawn : Piece
     {
-        public Pawn()
+        public Pawn(bool color)
         {
-        }
-
-        public override Move(Move move)
-        {
-            if (isValidMove(move)) Console.WriteLine("Hello world from pawn");
+            this.color = color;
+            this.nameShort = 'P';
         }
     }
 }
