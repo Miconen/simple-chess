@@ -11,7 +11,6 @@ namespace Chess.Rules
 
         public Game()
         {
-            // TODO: Implement game loop
             this.board = new Board();
             board.Populate();
         }
