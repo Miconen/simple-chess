@@ -1,7 +1,7 @@
 using System;
 using Chess;
 using Chess.Chessboard;
-
+using Chess.Rules;
 
 namespace Chess.Rules
 {
@@ -50,15 +50,14 @@ namespace Chess.Rules
                 return;
             }
 
-            Console.WriteLine($"Selected: {selectedTile.piece.nameShort}");
-
             // Let the user select a tile to move to
             int inputTargetRank = this.GetValidInput("Input target rank: ");
             if (inputTargetRank == -1) return;
             int inputTargetFile = this.GetValidInput("Input target file: ");
             if (inputTargetFile == -1) return;
 
-            /* Move move = new Move */
+            Move move = new Move(selectedTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
+
             this.GameLoop();
         }
 
