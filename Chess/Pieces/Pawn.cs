@@ -9,7 +9,7 @@ namespace Chess.Pieces
         {
             this.color = color;
             this.nameShort = 'P';
-        }
+        }   
     }
 }
 
