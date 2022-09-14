@@ -65,8 +65,8 @@ namespace Chess.Rules
         private int GetValidInput(string message)
         {
             Console.Write(message);
-            string input = Console.ReadLine();
-            if (input == "break") return 0;
+            string input = Console.ReadLine() ?? "break";
+            if (input == "break" || input == null) return 0;
             int output;
             if (!int.TryParse(input, out output)) return this.GetValidInput(message);
             return output;
