@@ -25,8 +25,6 @@ namespace Chess.Chessboard
                     this.Tiles[i, ii] = new Tile(i, ii);
                 }
             }
-
-            // TODO: Initialize width x height grid of tiles
         }
 
         public void Populate() 
@@ -98,6 +96,13 @@ namespace Chess.Chessboard
                 }
                 Console.WriteLine();
             }
+        }
+
+        public bool InBounds(int rank, int file)
+        {
+            if (rank <= 0 || rank > this.BOARD_WIDTH) return false;
+            if (file <= 0 || file > this.BOARD_HEIGHT) return false;
+            return true;
         }
     }
 }
