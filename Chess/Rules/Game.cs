@@ -27,9 +27,9 @@ namespace Chess.Rules
             
             // Let the user select a tile to move from
             int inputRank = this.GetValidInput("Input rank: ");
-            if (inputRank == 0) return;
+            if (inputRank == -1) return;
             int inputFile = this.GetValidInput("Input file: ");
-            if (inputFile == 0) return;
+            if (inputFile == -1) return;
 
             Console.WriteLine($"{inputRank} {inputFile}");
 
@@ -54,9 +54,9 @@ namespace Chess.Rules
 
             // Let the user select a tile to move to
             int inputTargetRank = this.GetValidInput("Input target rank: ");
-            if (inputTargetRank == 0) return;
+            if (inputTargetRank == -1) return;
             int inputTargetFile = this.GetValidInput("Input target file: ");
-            if (inputTargetFile == 0) return;
+            if (inputTargetFile == -1) return;
 
             /* Move move = new Move */
             this.GameLoop();
@@ -66,10 +66,10 @@ namespace Chess.Rules
         {
             Console.Write(message);
             string input = Console.ReadLine();
-            if (input == "break") return 0;
+            if (input == "break") return -1;
             int output;
             if (!int.TryParse(input, out output)) return this.GetValidInput(message);
-            return output;
+            return output -1;
         }
     }
 }

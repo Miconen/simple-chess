@@ -100,8 +100,8 @@ namespace Chess.Chessboard
 
         public bool InBounds(int rank, int file)
         {
-            if (rank <= 0 || rank > this.BOARD_WIDTH) return false;
-            if (file <= 0 || file > this.BOARD_HEIGHT) return false;
+            if (rank < 0 || rank > this.BOARD_WIDTH) return false;
+            if (file < 0 || file > this.BOARD_HEIGHT) return false;
             return true;
         }
     }
