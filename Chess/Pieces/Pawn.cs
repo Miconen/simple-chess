@@ -1,5 +1,6 @@
 using System;
 using Chess;
+using Chess.Rules;
 
 namespace Chess.Pieces
 {
@@ -10,6 +11,12 @@ namespace Chess.Pieces
             this.color = color;
             this.nameShort = 'P';
         }   
+
+        public override bool IsValidMove(Move move)
+        {
+            if (move.fromRank != move.toRank) return false;
+            return true;
+        }
     }
 }
 

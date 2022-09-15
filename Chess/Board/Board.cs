@@ -1,6 +1,7 @@
 using System;
 using Chess;
 using Chess.Pieces;
+using Chess.Rules;
 
 namespace Chess.Chessboard
 {
@@ -25,6 +26,12 @@ namespace Chess.Chessboard
                     this.Tiles[i, ii] = new Tile(i, ii);
                 }
             }
+        }
+
+        public void Move(Move move)
+        {
+            move.toTile.piece = move.fromTile.piece;
+            move.fromTile.piece = null;
         }
 
         public void Populate()

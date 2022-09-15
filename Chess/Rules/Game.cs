@@ -38,17 +38,19 @@ namespace Chess.Rules
             // Check if given input is valid and error free
             this.CheckValidInput(inputRank, inputFile);
 
-            // Selected tile
-            Tile selectedTile = board.Tiles[inputRank, inputFile];
-            Console.WriteLine($"{selectedTile.piece.GetColor(true)} {selectedTile.piece.nameShort}");
-
             // Let the user select a tile to move to
             int inputTargetRank = this.GetValidInput("Input target rank: ");
             if (inputTargetRank == -1) return;
             int inputTargetFile = this.GetValidInput("Input target file: ");
             if (inputTargetFile == -1) return;
 
-            Move move = new Move(selectedTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
+            // Selected tile
+            Tile fromTile = board.Tiles[inputRank, inputFile];
+            Tile toTile = board.Tiles[inputTargetRank, inputTargetFile];
+            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort}");
+
+            Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
+            if (fromTile.piece.IsValidMove(move)) board.Move(move);
 
             this.GameLoop();
         }

@@ -1,5 +1,6 @@
 using System;
 using Chess;
+using Chess.Rules;
 
 namespace Chess.Pieces
 {
@@ -7,16 +8,6 @@ namespace Chess.Pieces
     {
         public bool color;
         public char nameShort;
-
-/*         public virtual Move(Move move)
-        {
-            Console.WriteLine("Hello world");
-        }
-
-        public bool isValidMove(Move move)
-        {
-
-        } */
 
         public bool IsWhite()
         {
@@ -36,6 +27,11 @@ namespace Chess.Pieces
 
             if (capitalize) response = char.ToUpper(response[0]) + response.Substring(1);
             return response;
+        }
+
+        public virtual bool IsValidMove(Move move)
+        {
+            return true; 
         }
     }
 }
