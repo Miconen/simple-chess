@@ -31,8 +31,6 @@ namespace Chess.Rules
             int inputFile = this.GetValidInput("Input file: ");
             if (inputFile == -1) return;
 
-            Console.WriteLine($"{inputRank} {inputFile}");
-
             // Selected tile
             // TODO: Convert user input to usable array indexes
             // Example: coordinates 1,1 should actually access array [0,0]
