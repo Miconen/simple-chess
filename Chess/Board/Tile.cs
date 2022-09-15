@@ -10,10 +10,10 @@ namespace Chess.Chessboard
         public int file;
         public Piece? piece { get; set; }
 
-        public Tile(int rank, int file) 
+        public Tile(int rank, int file)
         {
-            this.rank = rank;
-            this.file = file;
+            this.rank = rank;  // rank == height
+            this.file = file;  // file = width
         }
 
         public bool Occupied()

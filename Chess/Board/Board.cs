@@ -27,7 +27,7 @@ namespace Chess.Chessboard
             }
         }
 
-        public void Populate() 
+        public void Populate()
         {
             for (int i = 0; i < this.BOARD_WIDTH; i++)
             {
@@ -59,10 +59,19 @@ namespace Chess.Chessboard
         public void PrintBoard()
         {
             Console.Clear();
+            // File, width coordinates
+            Console.WriteLine("  " + 1 + " " + 2 + " " + 3 + " " + 4 + " " + 5 + " " + 6 + " " + 7 + " " + 8);
+            int boardHeightCoordinates = 1;
+
             for (int i = 0; i < this.BOARD_HEIGHT; i++)
             {
+                // Rank, Height coordinates 
+                Console.Write(boardHeightCoordinates + " ");
+                boardHeightCoordinates++;
+
                 for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
                 {
+
                     Tile currentTile = this.Tiles[i, ii];
 
                     if ((i + ii) % 2 == 0)
@@ -73,8 +82,8 @@ namespace Chess.Chessboard
                     {
                         Console.BackgroundColor = ConsoleColor.White;
                     }
-   
-                    if (currentTile.Occupied()) 
+
+                    if (currentTile.Occupied())
                     {
                         if (currentTile.piece.color)
                         {
