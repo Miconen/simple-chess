@@ -37,8 +37,7 @@ namespace Chess.Rules
             // TODO: Convert user input to usable array indexes
             // Example: coordinates 1,1 should actually access array [0,0]
             Tile selectedTile = board.Tiles[inputRank, inputFile];
-            Console.WriteLine(selectedTile.piece.nameShort);
-            Console.WriteLine(selectedTile.piece.color);
+            Console.WriteLine(selectedTile.piece.GetColor(true) + selectedTile.piece.nameShort);
             // Check if selected tile is inBounds and has a piece on it
             if (!board.InBounds(inputRank, inputFile))
             {
