@@ -21,9 +21,13 @@ namespace Chess.Rules
             this.GameLoop();
         }
 
-        public void GameLoop()
+        public void GameLoop(List<string> errors = null)
         {
             this.board.PrintBoard();
+
+            // Write errors from previous run here
+            // This prevents them from getting cleared earlier
+            this.WriteErrors(errors);
 
             // Let the user select a tile to move from
             int inputRank = this.GetValidInput("Input rank: ");
@@ -31,22 +35,12 @@ namespace Chess.Rules
             int inputFile = this.GetValidInput("Input file: ");
             if (inputFile == -1) return;
 
+            // Check if given input is valid and error free
+            this.CheckValidInput(inputRank, inputFile);
+
             // Selected tile
-            // TODO: Convert user input to usable array indexes
-            // Example: coordinates 1,1 should actually access array [0,0]
             Tile selectedTile = board.Tiles[inputRank, inputFile];
-            Console.WriteLine(selectedTile.piece.GetColor(true) + selectedTile.piece.nameShort);
-            // Check if selected tile is inBounds and has a piece on it
-            if (!board.InBounds(inputRank, inputFile))
-            {
-                this.GameLoop();
-                return;
-            }
-            if (!selectedTile.Occupied())
-            {
-                this.GameLoop();
-                return;
-            }
+            Console.WriteLine($"{selectedTile.piece.GetColor(true)} {selectedTile.piece.nameShort}");
 
             // Let the user select a tile to move to
             int inputTargetRank = this.GetValidInput("Input target rank: ");
@@ -67,6 +61,39 @@ namespace Chess.Rules
             int output;
             if (!int.TryParse(input, out output)) return this.GetValidInput(message);
             return output - 1;
+        }
+
+        private void CheckValidInput(int inputRank, int inputFile)
+        {
+            var errors = new List<string>();
+            // Errors that lead to other errors have to be caught seperately with ifs
+            // Check if selected tile is inBounds and has a piece on it
+            if (!board.InBounds(inputRank, inputFile))
+            {
+                errors.Add("Selected tile not in bounds of the board");
+            }
+            // Check for non-fatal errors
+            else
+            {
+                // Check if file contains a piece
+                Tile selectedTile = board.Tiles[inputRank, inputFile];
+                if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
+            }
+
+            if (errors.Count == 0) return;
+
+            this.GameLoop(errors);
+            return;
+        }
+
+        private void WriteErrors(List<string> errors)
+        {
+            if (errors == null) return;
+
+            foreach (string error in errors)
+            {
+                Console.WriteLine(error);
+            }
         }
     }
 }
