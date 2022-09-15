@@ -15,7 +15,7 @@ namespace Chess.Rules
             board.Populate();
         }
 
-        public void Start() 
+        public void Start()
         {
             this.board.PrintBoard();
             this.GameLoop();
@@ -24,7 +24,7 @@ namespace Chess.Rules
         public void GameLoop()
         {
             this.board.PrintBoard();
-            
+
             // Let the user select a tile to move from
             int inputRank = this.GetValidInput("Input rank: ");
             if (inputRank == -1) return;
@@ -37,7 +37,8 @@ namespace Chess.Rules
             // TODO: Convert user input to usable array indexes
             // Example: coordinates 1,1 should actually access array [0,0]
             Tile selectedTile = board.Tiles[inputRank, inputFile];
-
+            Console.WriteLine(selectedTile.piece.nameShort);
+            Console.WriteLine(selectedTile.piece.color);
             // Check if selected tile is inBounds and has a piece on it
             if (!board.InBounds(inputRank, inputFile))
             {
@@ -68,7 +69,7 @@ namespace Chess.Rules
             if (input == "break" || input == null) return -1;
             int output;
             if (!int.TryParse(input, out output)) return this.GetValidInput(message);
-            return output -1;
+            return output - 1;
         }
     }
 }
