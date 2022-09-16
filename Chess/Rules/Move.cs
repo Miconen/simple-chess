@@ -1,5 +1,6 @@
 using System;
 using Chess;
+using Chess.Pieces;
 using Chess.Chessboard;
 
 namespace Chess.Rules
@@ -23,16 +24,44 @@ namespace Chess.Rules
             this.toFile = toFile;
         }
 
+        public bool IsFreeToMove(Piece piece)
+        {
+            if (this.fromFile == this.toFile)
+            {
+                min = Math.Min(this.fromRank, this.toRank);
+                max = Math.Max(this.fromRank, this.toRank);
+            }
+            else
+            {
+                min = Math.Min(this.fromFile, this.toFile);
+                max = Math.Max(this.fromFile, this.toFile);
+            }
+
+            for (int i = min; i < max; ++i)
+            {
+                if (this.fromFile == this.toFile)
+                {
+                    Console.WriteLine(this.fromFile + "/" + i);
+                }
+                else
+                {
+                    Console.WriteLine(i + "/" + this.fromRank);
+                }
+            }
+
+            Console.WriteLine(min + " " + max);
+
+            return true;
+        }
+
         public bool IsPerpendicular()
         {
-            return true;
+            return (fromFile == toFile || fromRank == toRank);
         }
 
         public bool IsDiagonal()
         {
-            bool response = (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
-            Console.WriteLine($"{response} {fromFile - fromRank} {toFile - toRank}");
-            return response;
+            return (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
         }
     }
 }
