@@ -34,15 +34,16 @@ namespace Chess.Rules
             if (inputRank == -1) return;
             int inputFile = this.GetValidInput("Input file: ");
             if (inputFile == -1) return;
-
             // Check if given input is valid and error free
-            this.CheckValidInput(inputRank, inputFile);
+            this.CheckValidInput(inputRank, inputFile, "origin");
 
             // Let the user select a tile to move to
             int inputTargetRank = this.GetValidInput("Input target rank: ");
             if (inputTargetRank == -1) return;
             int inputTargetFile = this.GetValidInput("Input target file: ");
             if (inputTargetFile == -1) return;
+            // Check if given input is valid and error free
+            this.CheckValidInput(inputTargetRank, inputTargetFile, "target");
 
             // Selected tile
             Tile fromTile = board.Tiles[inputRank, inputFile];
@@ -65,7 +66,7 @@ namespace Chess.Rules
             return output - 1;
         }
 
-        private void CheckValidInput(int inputRank, int inputFile)
+        private void CheckValidInput(int inputRank, int inputFile, string tile)
         {
             var errors = new List<string>();
             // Errors that lead to other errors have to be caught seperately with ifs
@@ -77,9 +78,22 @@ namespace Chess.Rules
             // Check for non-fatal errors
             else
             {
-                // Check if file contains a piece
+                // Using of selectedTile is only safe after performing
+                // the potentially fatal checks, IE checking it's in bounds.
                 Tile selectedTile = board.Tiles[inputRank, inputFile];
-                if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
+                if (tile == "origin")
+                {
+                    // Check if file contains a piece
+                    if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
+
+                }
+                else if (tile == "target")
+                {
+                    // Check if file contains a piece
+                    // TODO: Implement turn based check for not eating your own pieces
+                    if (selectedTile.Occupied()) errors.Add("Tile contains a piece, we don't know what piece though lol");
+
+                }
             }
 
             if (errors.Count == 0) return;
