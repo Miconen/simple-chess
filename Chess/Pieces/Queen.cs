@@ -16,7 +16,6 @@ namespace Chess.Pieces
         {
             bool validMove = (move.IsDiagonal() || move.IsPerpendicular());
             if (!validMove) return false;
-            if (move.IsFreeToMove(this));
             return true;
         }
     }

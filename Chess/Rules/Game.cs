@@ -56,7 +56,8 @@ namespace Chess.Rules
             Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort}");
 
             Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
-            if (fromTile.piece.IsValidMove(move))
+            var tiles = move.GetTileIndexesBetweenInputs();
+            if (fromTile.piece.IsValidMove(move) && fromTile.piece.IsNotBlocked(tiles))
             {
                 this.board.Move(move);
                 this.turn.SwitchTurn();

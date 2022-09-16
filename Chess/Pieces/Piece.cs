@@ -41,6 +41,15 @@ namespace Chess.Pieces
         {
             return true; 
         }
+
+        public bool IsNotBlocked(List<Tuple<int, int>> list)
+        {
+            foreach (Tuple<int, int> value in list)
+            {
+                Console.WriteLine(value);
+            }
+            return true;
+        }
     }
 }
 
