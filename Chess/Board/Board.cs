@@ -19,7 +19,7 @@ namespace Chess.Chessboard
             // Initialize two dimensional board array
             Tiles = new Tile[this.BOARD_WIDTH, this.BOARD_HEIGHT];
 
-            for (int i = 0; i < this.BOARD_HEIGHT; i++)
+            for (int i = 7; i >= 0; i--)
             {
                 for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
                 {
@@ -68,15 +68,14 @@ namespace Chess.Chessboard
         public void PrintBoard()
         {
             Console.Clear();
-            // File, width coordinates
-            Console.WriteLine("  " + 1 + " " + 2 + " " + 3 + " " + 4 + " " + 5 + " " + 6 + " " + 7 + " " + 8);
-            int boardHeightCoordinates = 1;
+            
+            int boardHeightCoordinates = 8;
 
-            for (int i = 0; i < this.BOARD_HEIGHT; i++)
+            for (int i = 7; i >= 0; i--)
             {
                 // Rank, Height coordinates 
                 Console.Write(boardHeightCoordinates + " ");
-                boardHeightCoordinates++;
+                boardHeightCoordinates--;
 
                 for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
                 {
@@ -114,6 +113,8 @@ namespace Chess.Chessboard
                 }
                 Console.WriteLine();
             }
+            // File, width coordinates
+            Console.WriteLine("  " + 1 + " " + 2 + " " + 3 + " " + 4 + " " + 5 + " " + 6 + " " + 7 + " " + 8);
         }
 
         public bool InBounds(int rank, int file)
