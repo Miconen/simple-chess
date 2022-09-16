@@ -30,7 +30,9 @@ namespace Chess.Chessboard
 
         public void Move(Move move)
         {
+            // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
+            // Remove piece from old tile
             move.fromTile.piece = null;
         }
 
