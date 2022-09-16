@@ -1,5 +1,6 @@
 using System;
 using Chess;
+using Chess.Chessboard;
 using Chess.Rules;
 
 namespace Chess.Pieces
@@ -42,13 +43,14 @@ namespace Chess.Pieces
             return true; 
         }
 
-        public bool IsNotBlocked(List<Tuple<int, int>> list)
+        public bool IsBlocked(List<Tile> list)
         {
-            foreach (Tuple<int, int> value in list)
+            bool response = false;
+            foreach (Tile tile in list)
             {
-                Console.WriteLine(value);
+                if (tile.piece is Piece) response = true;
             }
-            return true;
+            return response;
         }
     }
 }

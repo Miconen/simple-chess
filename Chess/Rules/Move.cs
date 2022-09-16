@@ -27,51 +27,38 @@ namespace Chess.Rules
         {
             var list = new List<Tuple<int, int>>();
             int min, max;
-
-            // If on same vertical
+            // Vertical movement
             if (this.fromFile == this.toFile)
             {
                 min = Math.Min(this.fromRank, this.toRank);
                 max = Math.Max(this.fromRank, this.toRank);
+                for (int i = min; i < max; ++i)
+                {
+                    list.Add(new Tuple<int,int>(i, this.fromFile));
+                }
             }
-            // If on same horizontal
+            // Horizontal movement
             else if (this.fromRank == this.toRank)
             {
                 min = Math.Min(this.fromFile, this.toFile);
                 max = Math.Max(this.fromFile, this.toFile);
+                for (int i = min; i < max; ++i)
+                {
+                    list.Add(new Tuple<int,int>(this.fromRank, i));
+                }
             }
-            // If diagonal
+            // Diagonal movement
             else
             {
-                int minFile, maxFile, minRank, maxRank;
-
-                minFile = Math.Min(this.fromFile, this.toFile);
-                maxFile = Math.Max(this.fromFile, this.toFile);
-                minRank = Math.Min(this.fromRank, this.toRank);
-                maxRank = Math.Max(this.fromRank, this.toRank);
-
-                min = Math.Min(minFile, minRank);
-                max = Math.Max(maxFile, maxRank);
-            }
-
-            for (int i = min; i < max; ++i)
-            {
-                if (this.fromFile == this.toFile)
+                int i = this.fromRank;
+                int ii = this.fromFile;
+                while(i != this.toRank && ii != this.toFile)
                 {
-                    list.Add(new Tuple<int,int>(i + 1, this.fromFile + 1));
-                }
-                else if (this.fromRank == this.toRank)
-                {
-                    list.Add(new Tuple<int,int>(this.fromRank + 1, i + 1));
-                }
-                // TODO: No worky
-                else
-                {
-                    list.Add(new Tuple<int, int>(min + i + 1, max - i + 1));
+                    i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
+                    ii = (this.fromFile > this.toFile) ? ii - 1 : ii + 1;
+                    list.Add(new Tuple<int, int>(i, ii));
                 }
             }
-
-            Console.WriteLine(min + " " + max);
 
             return list;
         }

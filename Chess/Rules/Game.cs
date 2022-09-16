@@ -33,9 +33,9 @@ namespace Chess.Rules
             this.WriteErrors(errors);
 
             // Let the user select a tile to move from
-            int inputRank = this.GetValidInput("Input rank: ");
+            int inputRank = this.GetValidInput($"Input rank of a {this.turn.ToString()} piece: ");
             if (inputRank == -1) return;
-            int inputFile = this.GetValidInput("Input file: ");
+            int inputFile = this.GetValidInput($"Input file of a {this.turn.ToString()} piece: ");
             if (inputFile == -1) return;
 
 
@@ -43,9 +43,9 @@ namespace Chess.Rules
             this.CheckValidInput(inputRank, inputFile, "origin");
 
             // Let the user select a tile to move to
-            int inputTargetRank = this.GetValidInput("Input target rank: ");
+            int inputTargetRank = this.GetValidInput($"Input rank of a {this.turn.ToString()} piece: ");
             if (inputTargetRank == -1) return;
-            int inputTargetFile = this.GetValidInput("Input target file: ");
+            int inputTargetFile = this.GetValidInput($"Input file of a {this.turn.ToString()} piece: ");
             if (inputTargetFile == -1) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputTargetRank, inputTargetFile, "target");
@@ -56,8 +56,17 @@ namespace Chess.Rules
             Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputRank + 1},{inputFile + 1}) to ({inputTargetRank + 1},{inputTargetFile + 1})");
 
             Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
-            var tiles = move.GetTileIndexesBetweenInputs();
-            if (fromTile.piece.IsValidMove(move) && fromTile.piece.IsNotBlocked(tiles))
+            // List of tiles (as coordinates) which the move travels through
+            List<Tuple<int,int>> coordinateList = move.GetTileIndexesBetweenInputs();
+            // Convert list of tiles to usable tile objects
+            List<Tile> tiles = this.board.CoordinateListToTiles(coordinateList);
+
+            bool isBlocked = fromTile.piece.IsBlocked(tiles);
+            bool isValid = fromTile.piece.IsValidMove(move); 
+
+            Console.WriteLine("Not blocked: " + !isBlocked + " | Valid: " + isValid);
+
+            if (isValid && !isBlocked)
             {
                 this.board.Move(move);
                 this.turn.SwitchTurn();

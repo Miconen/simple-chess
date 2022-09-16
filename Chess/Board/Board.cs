@@ -123,6 +123,16 @@ namespace Chess.Chessboard
             if (file < 0 || file > this.BOARD_HEIGHT) return false;
             return true;
         }
+
+        public List<Tile> CoordinateListToTiles(List<Tuple<int, int>> coordinates)
+        {
+            var tiles = new List<Tile>();
+            foreach (Tuple<int, int> tuple in coordinates)
+            {
+                tiles.Add(this.Tiles[tuple.Item1, tuple.Item2]);
+            }
+            return tiles;
+        }
     }
 }
 
