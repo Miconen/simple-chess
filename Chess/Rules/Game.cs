@@ -9,13 +9,13 @@ namespace Chess.Rules
     {
         public Board board { get; }
         
-        public Turns playerTurn;
+        public Turns turn;
         public Game()
 
         {
             this.board = new Board();
             board.Populate();
-            this.playerTurn = new Turns(true);
+            this.turn= new Turns(true);
         }
 
         public void Start()
@@ -39,16 +39,6 @@ namespace Chess.Rules
             if (inputFile == -1) return;
 
 
-            bool checkTurn = playerTurn.CheckTurn();
-            if(board.Tiles[inputRank, inputFile].piece.IsWhite() != checkTurn) 
-            {
-                // selected wrong piece
-                this.GameLoop();
-                return;
-            }
-            playerTurn.SwitchTurn();
-            
-
             // Check if given input is valid and error free
             this.CheckValidInput(inputRank, inputFile, "origin");
 
@@ -66,7 +56,11 @@ namespace Chess.Rules
             Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort}");
 
             Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
-            if (fromTile.piece.IsValidMove(move)) board.Move(move);
+            if (fromTile.piece.IsValidMove(move))
+            {
+                this.board.Move(move);
+                this.turn.SwitchTurn();
+            }
 
             this.GameLoop();
         }
@@ -96,18 +90,18 @@ namespace Chess.Rules
                 // Using of selectedTile is only safe after performing
                 // the potentially fatal checks, IE checking it's in bounds.
                 Tile selectedTile = board.Tiles[inputRank, inputFile];
+                bool currentTurn = this.turn.CheckTurn();
                 if (tile == "origin")
                 {
                     // Check if file contains a piece
                     if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
-
+                    // Piece selected doesn't correspond to turn 
+                    else if(selectedTile.piece.IsWhite() != currentTurn) errors.Add($"Cannot move this piece on {this.turn.ToString()}s turn");
                 }
                 else if (tile == "target")
                 {
                     // Check if file contains a piece
-                    // TODO: Implement turn based check for not eating your own pieces
-                    if (selectedTile.Occupied()) errors.Add("Tile contains a piece, we don't know what piece though lol");
-
+                    if (selectedTile.Occupied() && selectedTile.piece.color == currentTurn) errors.Add("Unable to move to a tile occupied by your own piece");
                 }
             }
 

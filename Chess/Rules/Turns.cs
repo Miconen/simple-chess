@@ -30,6 +30,15 @@ namespace Chess.Rules
             //Console.WriteLine("Black turn");
             return this.turnBool;
         }
+
+        public string ToString(bool capitalize = false)
+        {
+            string response = "";
+            if (this.turnBool) response = "white";
+            else response = "black";
+
+            if (capitalize) response = char.ToUpper(response[0]) + response.Substring(1);
+            return response;
+        }
     }
-    
 }
