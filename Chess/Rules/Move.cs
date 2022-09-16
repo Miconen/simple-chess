@@ -26,6 +26,8 @@ namespace Chess.Rules
 
         public bool IsFreeToMove(Piece piece)
         {
+            int min, max;
+
             if (this.fromFile == this.toFile)
             {
                 min = Math.Min(this.fromRank, this.toRank);
