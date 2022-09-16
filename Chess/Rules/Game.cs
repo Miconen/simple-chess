@@ -8,16 +8,19 @@ namespace Chess.Rules
     public class Game
     {
         public Board board { get; }
-
+        
+        public Turns playerTurn;
         public Game()
+
         {
             this.board = new Board();
             board.Populate();
+            this.playerTurn = new Turns(true);
         }
 
         public void Start()
         {
-            this.board.PrintBoard();
+            //this.board.PrintBoard();
             this.GameLoop();
         }
 
@@ -34,6 +37,17 @@ namespace Chess.Rules
             if (inputRank == -1) return;
             int inputFile = this.GetValidInput("Input file: ");
             if (inputFile == -1) return;
+
+
+            bool checkTurn = playerTurn.CheckTurn();
+            if(board.Tiles[inputRank, inputFile].piece.IsWhite() != checkTurn) 
+            {
+                // selected wrong piece
+                this.GameLoop();
+                return;
+            }
+            playerTurn.SwitchTurn();
+            
 
             // Check if given input is valid and error free
             this.CheckValidInput(inputRank, inputFile);
