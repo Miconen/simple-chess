@@ -1,5 +1,6 @@
 using System;
 using Chess;
+using Chess.Rules;
 
 namespace Chess.Pieces
 {
@@ -9,6 +10,12 @@ namespace Chess.Pieces
         {
             this.color = color;
             this.nameShort = 'R';
+        }
+
+        public override bool IsValidMove(Move move)
+        {
+            if (!move.IsPerpendicular()) return false;
+            return true;
         }
     }
 }

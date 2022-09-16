@@ -22,5 +22,17 @@ namespace Chess.Rules
             this.toRank = toRank;
             this.toFile = toFile;
         }
+
+        public bool IsPerpendicular()
+        {
+            return true;
+        }
+
+        public bool IsDiagonal()
+        {
+            bool response = (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
+            Console.WriteLine($"{response} {fromFile - fromRank} {toFile - toRank}");
+            return response;
+        }
     }
 }

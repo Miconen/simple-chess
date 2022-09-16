@@ -8,6 +8,14 @@ namespace Chess.Pieces
     {
         public bool color;
         public char nameShort;
+        // Can the piece go through/over other pieces?
+        public bool ghosting;
+
+        public Piece()
+        {
+            // By default don't allow pieces to traverse through others
+            this.ghosting = false;
+        }
 
         public bool IsWhite()
         {

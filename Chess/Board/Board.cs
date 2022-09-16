@@ -67,7 +67,7 @@ namespace Chess.Chessboard
 
         public void PrintBoard()
         {
-            //Console.Clear();
+            // Console.Clear();
             
             int boardHeightCoordinates = 8;
 
