@@ -53,7 +53,7 @@ namespace Chess.Rules
             // Selected tile
             Tile fromTile = board.Tiles[inputRank, inputFile];
             Tile toTile = board.Tiles[inputTargetRank, inputTargetFile];
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort}");
+            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputRank + 1},{inputFile + 1}) to ({inputTargetRank + 1},{inputTargetFile + 1})");
 
             Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
             var tiles = move.GetTileIndexesBetweenInputs();
