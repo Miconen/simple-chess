@@ -14,7 +14,6 @@ namespace Chess.Pieces
 
         public override bool IsValidMove(Move move)
         {
-            if (move.fromRank != move.toRank) return false;
             return true;
         }
     }

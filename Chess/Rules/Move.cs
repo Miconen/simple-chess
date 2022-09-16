@@ -30,6 +30,7 @@ namespace Chess.Rules
             // Vertical movement
             if (this.fromFile == this.toFile)
             {
+                Console.WriteLine("Vertical");
                 min = Math.Min(this.fromRank, this.toRank);
                 max = Math.Max(this.fromRank, this.toRank);
                 for (int i = min; i < max; ++i)
@@ -40,6 +41,7 @@ namespace Chess.Rules
             // Horizontal movement
             else if (this.fromRank == this.toRank)
             {
+                Console.WriteLine("Horizontal");
                 min = Math.Min(this.fromFile, this.toFile);
                 max = Math.Max(this.fromFile, this.toFile);
                 for (int i = min; i < max; ++i)
@@ -50,6 +52,7 @@ namespace Chess.Rules
             // Diagonal movement
             else
             {
+                Console.WriteLine("Diagonal");
                 int i = this.fromRank;
                 int ii = this.fromFile;
                 while(i != this.toRank && ii != this.toFile)

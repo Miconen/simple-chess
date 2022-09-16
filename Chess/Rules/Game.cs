@@ -43,9 +43,9 @@ namespace Chess.Rules
             this.CheckValidInput(inputRank, inputFile, "origin");
 
             // Let the user select a tile to move to
-            int inputTargetRank = this.GetValidInput($"Input rank of a {this.turn.ToString()} piece: ");
+            int inputTargetRank = this.GetValidInput($"Input rank of a tile to move to: ");
             if (inputTargetRank == -1) return;
-            int inputTargetFile = this.GetValidInput($"Input file of a {this.turn.ToString()} piece: ");
+            int inputTargetFile = this.GetValidInput($"Input file of a tile to move to: ");
             if (inputTargetFile == -1) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputTargetRank, inputTargetFile, "target");
