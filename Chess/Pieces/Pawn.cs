@@ -25,14 +25,9 @@ namespace Chess.Pieces
             // Prevent moving across files
             if (move.fromFile != move.toFile) return false;
 
-            if (this.color)
-            {
-                if (move.fromRank > move.toRank) return false;
-            }
-            else
-            {
-                if (move.fromRank < move.toRank) return false;
-            }
+            // Prevent pawns from moving backwards, direction depends on color of the pawns
+            if (this.color && move.fromRank > move.toRank) return false;
+            if (!this.color && move.fromRank < move.toRank) return false;
 
             this.firstMove = false;
             return true;
