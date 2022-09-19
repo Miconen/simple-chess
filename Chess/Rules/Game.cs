@@ -61,7 +61,7 @@ namespace Chess.Rules
             // Convert list of tiles to usable tile objects
             List<Tile> tiles = this.board.CoordinateListToTiles(coordinateList);
 
-            bool isBlocked = fromTile.piece.IsBlocked(tiles);
+            bool isBlocked = (fromTile.piece.ghosting) ? true : fromTile.piece.IsBlocked(tiles);
             bool isValid = fromTile.piece.IsValidMove(move); 
 
             Console.WriteLine("Not blocked: " + !isBlocked + " | Valid: " + isValid);
