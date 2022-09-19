@@ -16,6 +16,12 @@ namespace Chess.Rules
         public void SwitchTurn() 
         {
             this.turnCount++;
+            if(this.turnBool) 
+            {
+                this.turnBool = false;
+                return;
+            } 
+            if(!this.turnBool) this.turnBool = true;
         }
 
         public bool CheckTurn() 

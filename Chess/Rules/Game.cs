@@ -27,7 +27,7 @@ namespace Chess.Rules
         public void GameLoop(List<string> errors = null)
         {
             this.board.PrintBoard();
-
+            
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
             this.WriteErrors(errors);
@@ -65,7 +65,7 @@ namespace Chess.Rules
             bool isValid = fromTile.piece.IsValidMove(move); 
 
             Console.WriteLine("Not blocked: " + !isBlocked + " | Valid: " + isValid);
-
+            
             if (isValid && !isBlocked)
             {
                 this.board.Move(move);
