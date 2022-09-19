@@ -26,27 +26,28 @@ namespace Chess.Rules
         public List<Tuple<int, int>> GetTileIndexesBetweenInputs()
         {
             var list = new List<Tuple<int, int>>();
-            int min, max;
             // Vertical movement
             if (this.fromFile == this.toFile)
             {
                 Console.WriteLine("Vertical");
-                min = Math.Min(this.fromRank, this.toRank);
-                max = Math.Max(this.fromRank, this.toRank);
-                for (int i = min; i < max; ++i)
+                int i = this.fromRank;
+                while(i != this.toRank)
                 {
-                    list.Add(new Tuple<int,int>(i, this.fromFile));
+                    i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
+                    Console.WriteLine(this.fromRank + " " + i);
+                    list.Add(new Tuple<int, int>(i, this.fromFile));
                 }
             }
             // Horizontal movement
             else if (this.fromRank == this.toRank)
             {
                 Console.WriteLine("Horizontal");
-                min = Math.Min(this.fromFile, this.toFile);
-                max = Math.Max(this.fromFile, this.toFile);
-                for (int i = min; i < max; ++i)
+                int i = this.fromFile;
+                while(i != this.toFile)
                 {
-                    list.Add(new Tuple<int,int>(this.fromRank, i));
+                    i = (this.fromFile > this.toFile) ? i - 1 : i + 1;
+                    Console.WriteLine(this.fromFile + " " + i);
+                    list.Add(new Tuple<int, int>(this.fromRank, i));
                 }
             }
             // Diagonal movement
