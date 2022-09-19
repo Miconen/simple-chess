@@ -46,9 +46,20 @@ namespace Chess.Pieces
         public bool IsBlocked(List<Tile> list)
         {
             bool response = false;
+            Tile targetTile = list[list.Count - 1];
+
+            // Check if both tiles have pieces on them
+            if (targetTile.Occupied())
+            {
+                // Compared if existing pieces are of different color
+                if (this.color != targetTile.piece.color) return false;
+            }
+            
+            // Loop over all tiles in between a move checking if they are occupied
             foreach (Tile tile in list)
             {
-                if (tile.piece is Piece) response = true;
+                // If piece is not null but type of Piece, we return true
+                if (tile.Occupied()) response = true;
             }
             return response;
         }

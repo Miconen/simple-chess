@@ -18,6 +18,11 @@ namespace Chess.Pieces
         public override bool IsValidMove(Move move)
         {
             int moveLength = Math.Abs(move.fromRank - move.toRank);
+            int moveOffset = Math.Abs(move.fromFile - move.toFile);
+
+            // Check early if eating move
+            if (moveOffset == 1 && moveLength == 1 && move.toTile.Occupied()) return true;
+
             // Only allow to move two files on first move of the piece
             if (moveLength > 2) return false;
             // Prevent moves larger than 1 if not first move
