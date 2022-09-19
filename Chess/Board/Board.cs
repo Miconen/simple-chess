@@ -67,14 +67,23 @@ namespace Chess.Chessboard
 
         public void PrintBoard()
         {
-            // Console.Clear();
+            /*
+             * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             * BLESS YOUR SOUL, WHOEVER HAS TO READ THIS SPAGHETTI USED TO RENDER THE BOARD
+             * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            */
             
+            const string SPACER = "   ";
+            const string SPACER_EMPTY = "       ";
             int boardHeightCoordinates = 8;
 
             for (int i = 7; i >= 0; i--)
             {
+                _boardPrintMargin(i);
+                Console.WriteLine();
+
                 // Rank, Height coordinates 
-                Console.Write(boardHeightCoordinates + " ");
+                Console.Write(SPACER + boardHeightCoordinates + SPACER);
                 boardHeightCoordinates--;
 
                 for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
@@ -102,19 +111,23 @@ namespace Chess.Chessboard
                             Console.ForegroundColor = ConsoleColor.Blue;
                         }
                         // Console.ForegroundColor = ConsoleColor.;
-                        Console.Write(currentTile.piece.nameShort.ToString() + " ");
+                        Console.Write(SPACER + currentTile.piece.nameShort.ToString() + SPACER);
                         Console.ResetColor();
                     }
                     else
                     {
-                        Console.Write("  ");
+                        Console.Write(SPACER_EMPTY);
                     }
                     Console.ResetColor();
                 }
-                Console.WriteLine();
+                _boardPrintMargin(i);
             }
+                Console.WriteLine();
             // File, width coordinates
-            Console.WriteLine("  " + 1 + " " + 2 + " " + 3 + " " + 4 + " " + 5 + " " + 6 + " " + 7 + " " + 8);
+
+            Console.WriteLine();
+            Console.WriteLine(SPACER_EMPTY + SPACER + 1 + SPACER + SPACER + 2 + SPACER + SPACER + 3 + SPACER + SPACER + 4 + SPACER + SPACER + 5 + SPACER + SPACER + 6 + SPACER + SPACER + 7 + SPACER + SPACER + 8);
+            Console.WriteLine();
         }
 
         public bool InBounds(int rank, int file)
@@ -132,6 +145,31 @@ namespace Chess.Chessboard
                 tiles.Add(this.Tiles[tuple.Item1, tuple.Item2]);
             }
             return tiles;
+        }
+
+        private void _boardPrintMargin (int i)
+        {
+
+            Console.WriteLine("");
+            Console.Write("       ");
+
+            for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
+            {
+
+                Tile currentTile = this.Tiles[i, ii];
+
+                if ((i + ii) % 2 == 0)
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                }
+
+                Console.Write("       ");
+                Console.ResetColor();
+            }
         }
     }
 }
