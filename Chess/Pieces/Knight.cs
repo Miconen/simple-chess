@@ -17,7 +17,6 @@ namespace Chess.Pieces
         {
             int min = Math.Min(move.fromRank - move.toRank, move.fromFile - move.toFile);
             int max = Math.Max(move.fromRank - move.toRank, move.fromFile - move.toFile);
-            Console.WriteLine(Math.Abs(min) + " " + Math.Abs(max));
 
             if (Math.Abs(min) == 1 && Math.Abs(max) == 2) return true;
             if (Math.Abs(min) == 2 && Math.Abs(max) == 1) return true;
