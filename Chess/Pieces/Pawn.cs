@@ -21,6 +21,7 @@ namespace Chess.Pieces
             int moveOffset = Math.Abs(move.fromFile - move.toFile);
 
             // Check early if eating move
+            if (move.toTile.Occupied() && moveOffset != 1) return false;
             if (moveOffset == 1 && moveLength == 1 && move.toTile.Occupied()) return true;
 
             // Only allow to move two files on first move of the piece
