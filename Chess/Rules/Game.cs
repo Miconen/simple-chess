@@ -2,35 +2,39 @@ using System;
 using Chess;
 using Chess.Chessboard;
 using Chess.Rules;
+using Chess.Error;
 
 namespace Chess.Rules
 {
     public class Game
     {
         public Board board { get; }
+        public ErrorHandler ErrorHandler;
         
         public Turns turn;
         public Game()
 
         {
             this.board = new Board();
+            this.ErrorHandler = new ErrorHandler();
             board.Populate();
-            this.turn= new Turns(true);
+            this.turn = new Turns(true);
         }
 
         public void Start()
         {
-            //this.board.PrintBoard();
+            this.ErrorHandler.ShowErrors();
             this.GameLoop();
         }
 
-        public void GameLoop(List<string> errors = null)
+        public void GameLoop()
         {
             this.board.PrintBoard();
             
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
-            this.WriteErrors(errors);
+            this.ErrorHandler.Write();
+            this.ErrorHandler.Flush();
 
             // Let the user select a tile to move from
             int inputRank = this.GetValidInput($"Input rank of a {this.turn.ToString()} piece: ");
@@ -66,14 +70,14 @@ namespace Chess.Rules
             // Check if the move is valid according to it's movement rules
             bool isValid = fromTile.piece.IsValidMove(move); 
 
-            Console.WriteLine("Not blocked: " + !isBlocked + " | Valid: " + isValid);
-            
             if (isValid && !isBlocked)
             {
                 this.board.Move(move);
                 this.turn.SwitchTurn();
             }
-
+            if (!isValid) ErrorHandler.New("Move was not valid");
+            if (isBlocked) ErrorHandler.New("Move was blocked by another piece");
+            
             this.GameLoop();
         }
 
@@ -117,20 +121,9 @@ namespace Chess.Rules
                 }
             }
 
-            if (errors.Count == 0) return;
-
-            this.GameLoop(errors);
+            if (ErrorHandler.IsEmpty()) return;
+            this.GameLoop();
             return;
-        }
-
-        private void WriteErrors(List<string> errors)
-        {
-            if (errors == null) return;
-
-            foreach (string error in errors)
-            {
-                Console.WriteLine(error);
-            }
         }
     }
 }
