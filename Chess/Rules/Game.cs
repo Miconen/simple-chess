@@ -33,7 +33,7 @@ namespace Chess.Rules
             this.WriteErrors(errors);
 
             // Let the user select a tile to move from
-            var inputFrom = this.GetValidInput($"{this.turn.ToString(true)}, select a piece: ");
+            var inputFrom = this.GetValidInput($"{this.turn.ToString(true)}, select a piece (letter/number): ");
             if (inputFrom.file == -1 || inputFrom.rank == -1) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputFrom.rank, inputFrom.file, "origin");
@@ -42,7 +42,7 @@ namespace Chess.Rules
             Console.WriteLine($"{fromTile.piece.GetColor(true)} selected {fromTile.piece.nameShort} on {inputFrom.file}{inputFrom.rank}");
 
             // Let the user select a tile to move from
-            var inputTo = this.GetValidInput($"Move {this.turn.ToString()}'s piece to: ");
+            var inputTo = this.GetValidInput($"Move {this.turn.ToString()}'s piece to (letter/number): ");
             if (inputTo.file == -1 || inputTo.rank == -1) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputTo.rank, inputTo.file, "target");
