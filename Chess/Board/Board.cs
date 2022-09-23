@@ -9,6 +9,7 @@ namespace Chess.Chessboard
     {
         public int BOARD_HEIGHT;
         public int BOARD_WIDTH;
+        public List<char> BOARD_LETTERS;
 
         public Tile[,] Tiles;
 
@@ -16,6 +17,9 @@ namespace Chess.Chessboard
         {
             this.BOARD_WIDTH = 8;
             this.BOARD_HEIGHT = 8;
+            this.BOARD_LETTERS = new List<char>();
+            this.BOARD_LETTERS.AddRange("ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray());
+
             // Initialize two dimensional board array
             Tiles = new Tile[this.BOARD_WIDTH, this.BOARD_HEIGHT];
 
@@ -26,6 +30,14 @@ namespace Chess.Chessboard
                     this.Tiles[i, ii] = new Tile(i, ii);
                 }
             }
+        }
+
+        public Tile GetTile(int rank, char file)
+        {
+            int fileIndex = this.BOARD_LETTERS.IndexOf(Char.ToUpper(file));
+            // Substract one from rank since it's currently the same as user input
+            // After substraction we can use it as an array/list index
+            return this.Tiles[rank - 1, fileIndex];
         }
 
         public void Move(Move move)
@@ -130,8 +142,9 @@ namespace Chess.Chessboard
             Console.WriteLine();
         }
 
-        public bool InBounds(int rank, int file)
+        public bool InBounds(char fileLetter, int rank)
         {
+            int file = this.BOARD_LETTERS.IndexOf(Char.ToUpper(fileLetter)) + 1;
             if (rank < 0 || rank > this.BOARD_WIDTH) return false;
             if (file < 0 || file > this.BOARD_HEIGHT) return false;
             return true;
@@ -142,7 +155,7 @@ namespace Chess.Chessboard
             var tiles = new List<Tile>();
             foreach (Tuple<int, int> tuple in coordinates)
             {
-                tiles.Add(this.Tiles[tuple.Item1, tuple.Item2]);
+                tiles.Add(this.GetTile(tuple.Item1, (char)tuple.Item2));
             }
             return tiles;
         }
