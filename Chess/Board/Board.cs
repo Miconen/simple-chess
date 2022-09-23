@@ -138,7 +138,7 @@ namespace Chess.Chessboard
             // File, width coordinates
 
             Console.WriteLine();
-            Console.WriteLine(SPACER_EMPTY + SPACER + 1 + SPACER + SPACER + 2 + SPACER + SPACER + 3 + SPACER + SPACER + 4 + SPACER + SPACER + 5 + SPACER + SPACER + 6 + SPACER + SPACER + 7 + SPACER + SPACER + 8);
+            Console.WriteLine(SPACER_EMPTY + SPACER + 'a' + SPACER + SPACER + 'b' + SPACER + SPACER + 'c' + SPACER + SPACER + 'd' + SPACER + SPACER + 'e' + SPACER + SPACER + 'f' + SPACER + SPACER + 'g' + SPACER + SPACER + 'h');
             Console.WriteLine();
         }
 
