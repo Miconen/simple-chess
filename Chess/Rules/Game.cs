@@ -37,29 +37,24 @@ namespace Chess.Rules
             this.ErrorHandler.Flush();
 
             // Let the user select a tile to move from
-            int inputRank = this.GetValidInput($"Input rank of a {this.turn.ToString()} piece: ");
-            if (inputRank == -1) return;
-            int inputFile = this.GetValidInput($"Input file of a {this.turn.ToString()} piece: ");
-            if (inputFile == -1) return;
-
-
+            var inputFrom = this.GetValidInput($"{this.turn.ToString(true)}, select a piece (letter/number): ");
+            if (inputFrom.file == -1 || inputFrom.rank == -1) return;
             // Check if given input is valid and error free
-            this.CheckValidInput(inputRank, inputFile, "origin");
-
-            // Let the user select a tile to move to
-            int inputTargetRank = this.GetValidInput($"Input rank of a tile to move to: ");
-            if (inputTargetRank == -1) return;
-            int inputTargetFile = this.GetValidInput($"Input file of a tile to move to: ");
-            if (inputTargetFile == -1) return;
-            // Check if given input is valid and error free
-            this.CheckValidInput(inputTargetRank, inputTargetFile, "target");
-
+            this.CheckValidInput(inputFrom.rank, inputFrom.file, "origin");
             // Selected tile
-            Tile fromTile = board.Tiles[inputRank, inputFile];
-            Tile toTile = board.Tiles[inputTargetRank, inputTargetFile];
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputRank + 1},{inputFile + 1}) to ({inputTargetRank + 1},{inputTargetFile + 1})");
+            Tile fromTile = board.GetTile(inputFrom.rank, inputFrom.file);
+            Console.WriteLine($"{fromTile.piece.GetColor(true)} selected {fromTile.piece.nameShort} on {inputFrom.file}{inputFrom.rank}");
 
-            Move move = new Move(fromTile, toTile, inputRank, inputFile, inputTargetRank, inputTargetFile);
+            // Let the user select a tile to move from
+            var inputTo = this.GetValidInput($"Move {this.turn.ToString()}'s piece to (letter/number): ");
+            if (inputTo.file == -1 || inputTo.rank == -1) return;
+            // Check if given input is valid and error free
+            this.CheckValidInput(inputTo.rank, inputTo.file, "target");
+            // Selected tile
+            Tile toTile = board.GetTile(inputTo.rank, inputTo.file);
+            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})");
+
+            Move move = new Move(fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
             // List of tiles (as coordinates) which the move travels through
             List<Tuple<int,int>> coordinateList = move.GetTileIndexesBetweenInputs();
             // Convert list of tiles to usable tile objects
@@ -81,22 +76,35 @@ namespace Chess.Rules
             this.GameLoop();
         }
 
-        private int GetValidInput(string message)
+        private (char file, int rank) GetValidInput(string message)
         {
             Console.Write(message);
+
             string input = Console.ReadLine() ?? "break";
-            if (input == "break" || input == null) return -1;
-            int output;
-            if (!int.TryParse(input, out output)) return this.GetValidInput(message);
-            return output - 1;
+            if (input == "break" || input == null) return ('0', 0);
+
+            if (input.Length != 2) return ('0', 0);
+
+            // Check if second character is a letter and store in a variable
+            if (!Char.IsLetter(input[0])) return ('0', 0);
+            char file = input[0];
+
+
+            // Check if first character is a digit and store in a variable
+            if (!Char.IsDigit(input[1])) return ('0', 0);
+            int rank = input[1] - '0';
+
+            if (!this.board.InBounds(file, rank)) return ('0', 0);
+
+            return (file, rank);
         }
 
-        private void CheckValidInput(int inputRank, int inputFile, string tile)
+        private void CheckValidInput(int inputRank, char inputFile, string tile)
         {
             var errors = new List<string>();
             // Errors that lead to other errors have to be caught seperately with ifs
             // Check if selected tile is inBounds and has a piece on it
-            if (!board.InBounds(inputRank, inputFile))
+            if (!this.board.InBounds(inputFile, inputRank))
             {
                 errors.Add("Selected tile not in bounds of the board");
             }
@@ -105,7 +113,7 @@ namespace Chess.Rules
             {
                 // Using of selectedTile is only safe after performing
                 // the potentially fatal checks, IE checking it's in bounds.
-                Tile selectedTile = board.Tiles[inputRank, inputFile];
+                Tile selectedTile = board.GetTile(inputRank, inputFile);
                 bool currentTurn = this.turn.CheckTurn();
                 if (tile == "origin")
                 {
