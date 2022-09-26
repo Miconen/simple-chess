@@ -40,6 +40,7 @@ namespace Chess.Chessboard
             return this.Tiles[rank - 1, fileIndex];
         }
 
+        // Move piece to new tile, gets called AFTER move has been validated and is legal
         public void Move(Move move)
         {
             // Move piece from old tile to new tile
