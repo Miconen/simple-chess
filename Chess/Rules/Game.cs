@@ -3,6 +3,7 @@ using Chess;
 using Chess.Chessboard;
 using Chess.Rules;
 using Chess.Error;
+using Chess.Error.Levels;
 
 namespace Chess.Rules
 {
@@ -22,16 +23,23 @@ namespace Chess.Rules
 
         public void Start()
         {
-            this.ErrorHandler.ShowErrors();
+            this.ErrorHandler.ToggleDebug();
+            this.ErrorHandler.ToggleInformation();
+            this.ErrorHandler.ToggleWarnings();
+            this.ErrorHandler.ToggleErrors();
             this.GameLoop();
         }
 
         public void GameLoop()
         {
             this.board.PrintBoard();
-            
+
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
+            this.ErrorHandler.New("Test debug", Level.Debug);
+            this.ErrorHandler.New("Test information", Level.Info);
+            this.ErrorHandler.New("Test warning", Level.Warning);
+            this.ErrorHandler.New("Test error", Level.Error);
             this.ErrorHandler.Write();
             this.ErrorHandler.Flush();
 
