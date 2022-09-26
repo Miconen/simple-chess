@@ -14,9 +14,9 @@ namespace Chess.Rules
 
         public Turns turn;
 
-        public List<Piece> WhiteCapturedPieces;
+        public CapturedPieces WhiteCapturedPieces;
 
-        public List<Piece> BlackCapturedPieces;
+        public CapturedPieces BlackCapturedPieces;
 
         public Game()
         {
@@ -24,8 +24,8 @@ namespace Chess.Rules
             this.ErrorHandler = new ErrorHandler();
             board.Populate();
             this.turn = new Turns(true);
-            this.WhiteCapturedPieces = new List<Piece>();
-            this.BlackCapturedPieces = new List<Piece>();
+            this.WhiteCapturedPieces = new CapturedPieces();
+            this.BlackCapturedPieces = new CapturedPieces();
         }
 
         public void Start()
@@ -36,7 +36,7 @@ namespace Chess.Rules
 
         public void GameLoop()
         {
-            this.board.PrintBoard();
+            this.board.PrintBoard(BlackCapturedPieces, WhiteCapturedPieces);
 
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
@@ -80,9 +80,6 @@ namespace Chess.Rules
             if (!isValid) ErrorHandler.New("Move was not valid");
             if (isBlocked) ErrorHandler.New("Move was blocked by another piece");
 
-            Console.WriteLine("White: " + string.Join(", ", this.WhiteCapturedPieces));
-
-            Console.WriteLine("Black: " + string.Join(", ", this.BlackCapturedPieces));
 
             this.GameLoop();
         }
@@ -146,8 +143,8 @@ namespace Chess.Rules
         }
         private ref List<Piece> _getCapturedList()
         {
-            if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces;
-            else return ref this.BlackCapturedPieces;
+            if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces.List;
+            else return ref this.BlackCapturedPieces.List;
         }
     }
 }

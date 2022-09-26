@@ -11,6 +11,7 @@ namespace Chess.Pieces
         public char nameShort;
         // Can the piece go through/over other pieces?
         public bool ghosting;
+        public int materialValue;
 
         public Piece()
         {

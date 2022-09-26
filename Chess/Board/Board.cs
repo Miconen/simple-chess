@@ -82,7 +82,7 @@ namespace Chess.Chessboard
             this.Tiles[7, 7].piece = new Rook(false);
         }
 
-        public void PrintBoard()
+        public void PrintBoard(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
         {
             /*
              * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -93,6 +93,14 @@ namespace Chess.Chessboard
             const string SPACER = "   ";
             const string SPACER_EMPTY = "       ";
             int boardHeightCoordinates = 8;
+
+            // Print list of captured pieces and calculate difference in material sum
+            int materialDifference = WhiteCapturedPieces.CalculateMaterialSum() - BlackCapturedPieces.CalculateMaterialSum();
+            Console.WriteLine();
+            BlackCapturedPieces.PrintList();
+            Console.Write("   ");
+            if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
+
 
             for (int i = 7; i >= 0; i--)
             {
@@ -145,6 +153,13 @@ namespace Chess.Chessboard
             Console.WriteLine();
             Console.WriteLine(SPACER_EMPTY + SPACER + 'a' + SPACER + SPACER + 'b' + SPACER + SPACER + 'c' + SPACER + SPACER + 'd' + SPACER + SPACER + 'e' + SPACER + SPACER + 'f' + SPACER + SPACER + 'g' + SPACER + SPACER + 'h');
             Console.WriteLine();
+
+            // Print captured list for White pieces
+            WhiteCapturedPieces.PrintList();
+            Console.Write("   ");
+            if (materialDifference > 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
+            Console.WriteLine();
+
         }
 
         public bool InBounds(char fileLetter, int rank)
