@@ -10,10 +10,9 @@ namespace Chess.Rules
     {
         public Board board { get; }
         public ErrorHandler ErrorHandler;
-        
         public Turns turn;
-        public Game()
 
+        public Game()
         {
             this.board = new Board();
             this.ErrorHandler = new ErrorHandler();
