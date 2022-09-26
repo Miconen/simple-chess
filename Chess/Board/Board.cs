@@ -40,8 +40,13 @@ namespace Chess.Chessboard
             return this.Tiles[rank - 1, fileIndex];
         }
 
-        public void Move(Move move)
+        public void Move(Move move, List<Piece> list)
         {
+            // Add "eaten" pieces to corresponding list
+            if (move.toTile.piece != null)
+            {
+                list.Add(move.toTile.piece);
+            }
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
             // Remove piece from old tile
@@ -84,7 +89,7 @@ namespace Chess.Chessboard
              * BLESS YOUR SOUL, WHOEVER HAS TO READ THIS SPAGHETTI USED TO RENDER THE BOARD
              * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             */
-            
+
             const string SPACER = "   ";
             const string SPACER_EMPTY = "       ";
             int boardHeightCoordinates = 8;
@@ -134,7 +139,7 @@ namespace Chess.Chessboard
                 }
                 _boardPrintMargin(i);
             }
-                Console.WriteLine();
+            Console.WriteLine();
             // File, width coordinates
 
             Console.WriteLine();
@@ -160,7 +165,7 @@ namespace Chess.Chessboard
             return tiles;
         }
 
-        private void _boardPrintMargin (int i)
+        private void _boardPrintMargin(int i)
         {
 
             Console.WriteLine("");

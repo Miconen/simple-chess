@@ -3,6 +3,7 @@ using Chess;
 using Chess.Chessboard;
 using Chess.Rules;
 using Chess.Error;
+using Chess.Pieces;
 
 namespace Chess.Rules
 {
@@ -10,15 +11,21 @@ namespace Chess.Rules
     {
         public Board board { get; }
         public ErrorHandler ErrorHandler;
-        
-        public Turns turn;
-        public Game()
 
+        public Turns turn;
+
+        public List<Piece> WhiteCapturedPieces;
+
+        public List<Piece> BlackCapturedPieces;
+
+        public Game()
         {
             this.board = new Board();
             this.ErrorHandler = new ErrorHandler();
             board.Populate();
             this.turn = new Turns(true);
+            this.WhiteCapturedPieces = new List<Piece>();
+            this.BlackCapturedPieces = new List<Piece>();
         }
 
         public void Start()
@@ -30,7 +37,7 @@ namespace Chess.Rules
         public void GameLoop()
         {
             this.board.PrintBoard();
-            
+
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
             this.ErrorHandler.Write();
@@ -56,23 +63,27 @@ namespace Chess.Rules
 
             Move move = new Move(fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
             // List of tiles (as coordinates) which the move travels through
-            List<Tuple<int,int>> coordinateList = move.GetTileIndexesBetweenInputs();
+            List<Tuple<int, int>> coordinateList = move.GetTileIndexesBetweenInputs();
             // Convert list of tiles to usable tile objects
             List<Tile> tiles = this.board.CoordinateListToTiles(coordinateList);
 
             // Check if a piece is blocked, bypass if move has ghosting AKA is allowed to move over other pieces
             bool isBlocked = (fromTile.piece.ghosting) ? false : fromTile.piece.IsBlocked(tiles);
             // Check if the move is valid according to it's movement rules
-            bool isValid = fromTile.piece.IsValidMove(move); 
+            bool isValid = fromTile.piece.IsValidMove(move);
 
             if (isValid && !isBlocked)
             {
-                this.board.Move(move);
+                this.board.Move(move, this._getCapturedList());
                 this.turn.SwitchTurn();
             }
             if (!isValid) ErrorHandler.New("Move was not valid");
             if (isBlocked) ErrorHandler.New("Move was blocked by another piece");
-            
+
+            Console.WriteLine("White: " + string.Join(", ", this.WhiteCapturedPieces));
+
+            Console.WriteLine("Black: " + string.Join(", ", this.BlackCapturedPieces));
+
             this.GameLoop();
         }
 
@@ -120,7 +131,7 @@ namespace Chess.Rules
                     // Check if file contains a piece
                     if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
                     // Piece selected doesn't correspond to turn 
-                    else if(selectedTile.piece.IsWhite() != currentTurn) errors.Add($"Cannot move this piece on {this.turn.ToString()}s turn");
+                    else if (selectedTile.piece.IsWhite() != currentTurn) errors.Add($"Cannot move this piece on {this.turn.ToString()}s turn");
                 }
                 else if (tile == "target")
                 {
@@ -132,6 +143,11 @@ namespace Chess.Rules
             if (ErrorHandler.IsEmpty()) return;
             this.GameLoop();
             return;
+        }
+        private ref List<Piece> _getCapturedList()
+        {
+            if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces;
+            else return ref this.BlackCapturedPieces;
         }
     }
 }
