@@ -40,7 +40,8 @@ namespace Chess.Chessboard
             return this.Tiles[rank - 1, fileIndex];
         }
 
-        public void Move(Move move, List<Piece> list)
+        // Move piece to new tile, gets called AFTER move has been validated and is legal
+        public void Move(Move move)
         {
             // Add "eaten" pieces to corresponding list
             if (move.toTile.piece != null)

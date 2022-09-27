@@ -11,11 +11,8 @@ namespace Chess.Rules
     {
         public Board board { get; }
         public ErrorHandler ErrorHandler;
-
         public Turns turn;
-
         public CapturedPieces WhiteCapturedPieces;
-
         public CapturedPieces BlackCapturedPieces;
 
         public Game()
