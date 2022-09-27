@@ -5,12 +5,16 @@ namespace Chess.Error
 {
     public class ErrorHandler 
     {
-        public List<string> Buffer;
         public Level Level;
+        private List<string> _buffer;
+        private List<string> _printBuffer;
 
         public ErrorHandler()
         {
-            this.Buffer = new List<string>();
+            // List of all errors
+            this._buffer = new List<string>();
+            // List of only the errors we are going to print
+            this._printBuffer = new List<string>();
             // By default don't show any errors or warnings
             this.Level = Level.None;
         }
@@ -22,11 +26,15 @@ namespace Chess.Error
 
         public void New(string message)
         {
-            this.Buffer.Add(message);
+            this._buffer.Add(message);
+            this._printBuffer.Add(message);
         }
 
         public void New(string message, Level severity = Level.Warning)
         {
+            // Don't add debug or info messages to error buffer, instead we use a special method later on to print them instantly
+            if (severity != Level.Debug && severity != Level.Info) this._buffer.Add(message);
+
             if (!_checkLevel(severity)) return;
 
             switch (severity)
@@ -44,7 +52,7 @@ namespace Chess.Error
                     _printErrorMessage(severity, message);
                     break;
                 default:
-                    this.Buffer.Add(
+                    this._printBuffer.Add(
                         $"[{DateTime.Now}] {message}"
                     );
                     break;
@@ -54,19 +62,19 @@ namespace Chess.Error
 
         public void Flush()
         {
-            this.Buffer.Clear(); 
+            this._buffer.Clear(); 
         }
 
         public bool IsEmpty()
         {
-            return (this.Buffer.Count == 0) ? true : false;
+            return (this._buffer.Count == 0) ? true : false;
         }
 
         public void Write()
         {
             if (this.IsEmpty()) return;
 
-            foreach (string error in this.Buffer)
+            foreach (string error in this._printBuffer)
             {
                 Console.WriteLine(error);
             }
@@ -96,13 +104,17 @@ namespace Chess.Error
         private void _printDebugMessage(Level severity, string message)
         {
             string formatStart = "\u001b[37m";
-            _printMessage(severity, message, formatStart);
+            string formatEnd = "\u001b[0m";
+
+            Console.WriteLine($"[{DateTime.Now.ToString("HH':'mm':'ss")}] ({formatStart + severity + formatEnd}) : {formatStart + message + formatEnd}");
         }
 
         private void _printInfoMessage(Level severity, string message)
         {
             string formatStart = "\u001b[34m";
-            _printMessage(severity, message, formatStart);
+            string formatEnd = "\u001b[0m";
+
+            Console.WriteLine($"[{DateTime.Now.ToString("HH':'mm':'ss")}] ({formatStart + severity + formatEnd}) : {formatStart + message + formatEnd}");
         }
 
         private void _printWarningMessage(Level severity, string message)
@@ -120,7 +132,7 @@ namespace Chess.Error
         private void _printMessage(Level severity, string message, string formatStart)
         {
             string formatEnd = "\u001b[0m";
-            this.Buffer.Add(
+            this._buffer.Add(
                 $"[{DateTime.Now.ToString("HH':'mm':'ss")}] ({formatStart + severity + formatEnd}) : {formatStart + message + formatEnd}"
             );
         }
