@@ -41,7 +41,7 @@ namespace Chess.Chessboard
         }
 
         // Move piece to new tile, gets called AFTER move has been validated and is legal
-        public void Move(Move move)
+        public void Move(Move move, List<Piece> list)
         {
             // Add "eaten" pieces to corresponding list
             if (move.toTile.piece != null)
