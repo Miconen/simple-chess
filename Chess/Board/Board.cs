@@ -43,6 +43,11 @@ namespace Chess.Chessboard
         // Move piece to new tile, gets called AFTER move has been validated and is legal
         public void Move(Move move)
         {
+            // Add "eaten" pieces to corresponding list
+            if (move.toTile.piece != null)
+            {
+                list.Add(move.toTile.piece);
+            }
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
             // Remove piece from old tile
@@ -78,17 +83,25 @@ namespace Chess.Chessboard
             this.Tiles[7, 7].piece = new Rook(false);
         }
 
-        public void PrintBoard()
+        public void PrintBoard(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
         {
             /*
              * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              * BLESS YOUR SOUL, WHOEVER HAS TO READ THIS SPAGHETTI USED TO RENDER THE BOARD
              * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             */
-            
+
             const string SPACER = "   ";
             const string SPACER_EMPTY = "       ";
             int boardHeightCoordinates = 8;
+
+            // Print list of captured pieces and calculate difference in material sum
+            int materialDifference = WhiteCapturedPieces.CalculateMaterialSum() - BlackCapturedPieces.CalculateMaterialSum();
+            Console.WriteLine();
+            BlackCapturedPieces.PrintList();
+            Console.Write("   ");
+            if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
+
 
             for (int i = 7; i >= 0; i--)
             {
@@ -135,12 +148,19 @@ namespace Chess.Chessboard
                 }
                 _boardPrintMargin(i);
             }
-                Console.WriteLine();
+            Console.WriteLine();
             // File, width coordinates
 
             Console.WriteLine();
             Console.WriteLine(SPACER_EMPTY + SPACER + 'a' + SPACER + SPACER + 'b' + SPACER + SPACER + 'c' + SPACER + SPACER + 'd' + SPACER + SPACER + 'e' + SPACER + SPACER + 'f' + SPACER + SPACER + 'g' + SPACER + SPACER + 'h');
             Console.WriteLine();
+
+            // Print captured list for White pieces
+            WhiteCapturedPieces.PrintList();
+            Console.Write("   ");
+            if (materialDifference > 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
+            Console.WriteLine();
+
         }
 
         public bool InBounds(char fileLetter, int rank)
@@ -161,7 +181,7 @@ namespace Chess.Chessboard
             return tiles;
         }
 
-        private void _boardPrintMargin (int i)
+        private void _boardPrintMargin(int i)
         {
 
             Console.WriteLine("");

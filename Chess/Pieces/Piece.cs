@@ -11,6 +11,7 @@ namespace Chess.Pieces
         public char nameShort;
         // Can the piece go through/over other pieces?
         public bool ghosting;
+        public int materialValue;
 
         public Piece()
         {
@@ -40,7 +41,7 @@ namespace Chess.Pieces
 
         public virtual bool IsValidMove(Move move)
         {
-            return true; 
+            return true;
         }
 
         public bool IsBlocked(List<Tile> list)
@@ -54,7 +55,7 @@ namespace Chess.Pieces
                 // Compared if existing pieces are of different color
                 if (this.color != targetTile.piece.color) return false;
             }
-            
+
             // Loop over all tiles in between a move checking if they are occupied
             foreach (Tile tile in list)
             {
@@ -63,6 +64,12 @@ namespace Chess.Pieces
             }
             return response;
         }
+
+        public override string ToString()
+        {
+            return Char.ToString(this.nameShort);
+        }
     }
+
 }
 
