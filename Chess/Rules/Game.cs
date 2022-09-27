@@ -64,7 +64,7 @@ namespace Chess.Rules
             this.CheckValidInput(inputTo.rank, inputTo.file, "target");
             // Selected tile
             Tile toTile = board.GetTile(inputTo.rank, inputTo.file);
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})");
+            this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})", Level.Info);
 
             Move move = new Move(fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
             // List of tiles (as coordinates) which the move travels through
