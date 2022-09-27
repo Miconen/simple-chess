@@ -13,7 +13,8 @@ namespace Chess.Pieces
             this.color = color;
             this.nameShort = 'P';
             this.firstMove = true;
-        }   
+            this.materialValue = 1;
+        }
 
         public override bool IsValidMove(Move move)
         {

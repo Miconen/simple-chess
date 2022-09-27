@@ -10,6 +10,7 @@ namespace Chess.Pieces
         {
             this.color = color;
             this.nameShort = 'B';
+            this.materialValue = 3;
         }
 
         public override bool IsValidMove(Move move)
