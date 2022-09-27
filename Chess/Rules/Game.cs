@@ -37,11 +37,7 @@ namespace Chess.Rules
 
         public void GameLoop()
         {
-<<<<<<< HEAD
-            this.board.PrintBoard();
-=======
             this.board.PrintBoard(BlackCapturedPieces, WhiteCapturedPieces);
->>>>>>> 16452b2810fa31c29dcc175c8d2c9323020c9200
 
             // Write errors from previous run here
             // This prevents them from getting cleared earlier
@@ -59,7 +55,7 @@ namespace Chess.Rules
             this.CheckValidInput(inputFrom.rank, inputFrom.file, "origin");
             // Selected tile
             Tile fromTile = board.GetTile(inputFrom.rank, inputFrom.file);
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} selected {fromTile.piece.nameShort} on {inputFrom.file}{inputFrom.rank}");
+            this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} selected {fromTile.piece.nameShort} on {inputFrom.file}{inputFrom.rank}", Level.Info);
 
             // Let the user select a tile to move from
             var inputTo = this.GetValidInput($"Move {this.turn.ToString()}'s piece to (letter/number): ");
