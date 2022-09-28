@@ -13,7 +13,7 @@ namespace Chess.Rules
         public int toRank;
         public int toFile;
 
-        public Move(Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile) 
+        public Move(Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile)
         {
             this.fromTile = fromTile;
             this.toTile = toTile;
@@ -32,7 +32,7 @@ namespace Chess.Rules
             {
                 moveInfo += "Vertical move: ";
                 int i = this.fromRank;
-                while(i != this.toRank)
+                while (i != this.toRank)
                 {
                     i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
                     moveInfo += "[" + this.fromRank + " " + i + "] ";
@@ -44,7 +44,7 @@ namespace Chess.Rules
             {
                 moveInfo += "Horizontal move: ";
                 int i = this.fromFile;
-                while(i != this.toFile)
+                while (i != this.toFile)
                 {
                     i = (this.fromFile > this.toFile) ? i - 1 : i + 1;
                     moveInfo += "[" + this.fromFile + " " + i + "] ";
@@ -57,7 +57,7 @@ namespace Chess.Rules
                 moveInfo += "Diagonal move: ";
                 int i = this.fromRank;
                 int ii = this.fromFile;
-                while(i != this.toRank && ii != this.toFile)
+                while (i != this.toRank && ii != this.toFile)
                 {
                     i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
                     ii = (this.fromFile > this.toFile) ? ii - 1 : ii + 1;
