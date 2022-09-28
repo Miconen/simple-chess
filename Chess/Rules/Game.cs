@@ -3,6 +3,7 @@ using Chess;
 using Chess.Chessboard;
 using Chess.Rules;
 using Chess.Error;
+using Chess.Error.Levels;
 using Chess.Pieces;
 
 namespace Chess.Rules
@@ -27,7 +28,10 @@ namespace Chess.Rules
 
         public void Start()
         {
-            this.ErrorHandler.ShowErrors();
+            this.ErrorHandler.ToggleDebug();
+            this.ErrorHandler.ToggleInformation();
+            this.ErrorHandler.ToggleWarnings();
+            this.ErrorHandler.ToggleErrors();
             this.GameLoop();
         }
 
@@ -41,22 +45,22 @@ namespace Chess.Rules
             this.ErrorHandler.Flush();
 
             // Let the user select a tile to move from
-            var inputFrom = this.GetValidInput($"{this.turn.ToString(true)}, select a piece (letter/number): ");
-            if (inputFrom.file == -1 || inputFrom.rank == -1) return;
+            var inputFrom = this._getValidInput($"[{this.turn.ToString(true)}] Select a piece (letter/number): ");
+            if (inputFrom.file == '0' || inputFrom.rank == 0) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputFrom.rank, inputFrom.file, "origin");
             // Selected tile
             Tile fromTile = board.GetTile(inputFrom.rank, inputFrom.file);
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} selected {fromTile.piece.nameShort} on {inputFrom.file}{inputFrom.rank}");
+            this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} selected ({fromTile.piece.nameShort}) on ({inputFrom.file}{inputFrom.rank})", Level.Info);
 
             // Let the user select a tile to move from
-            var inputTo = this.GetValidInput($"Move {this.turn.ToString()}'s piece to (letter/number): ");
-            if (inputTo.file == -1 || inputTo.rank == -1) return;
+            var inputTo = this._getValidInput($"[{this.turn.ToString(true)}] Select a tile to move to (letter/number): ");
+            if (inputTo.file == '0' || inputTo.rank == 0) return;
             // Check if given input is valid and error free
             this.CheckValidInput(inputTo.rank, inputTo.file, "target");
             // Selected tile
             Tile toTile = board.GetTile(inputTo.rank, inputTo.file);
-            Console.WriteLine($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})");
+            this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})", Level.Info);
 
             Move move = new Move(fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
             // List of tiles (as coordinates) which the move travels through
@@ -74,14 +78,14 @@ namespace Chess.Rules
                 this.board.Move(move, this._getCapturedList());
                 this.turn.SwitchTurn();
             }
-            if (!isValid) ErrorHandler.New("Move was not valid");
-            if (isBlocked) ErrorHandler.New("Move was blocked by another piece");
+            if (!isValid) this.ErrorHandler.New("Move was not valid", Level.Warning);
+            if (isBlocked) this.ErrorHandler.New("Move was blocked by another piece", Level.Warning);
 
 
             this.GameLoop();
         }
 
-        private (char file, int rank) GetValidInput(string message)
+        private (char file, int rank) _getValidInput(string message)
         {
             Console.Write(message);
 
@@ -106,12 +110,12 @@ namespace Chess.Rules
 
         private void CheckValidInput(int inputRank, char inputFile, string tile)
         {
-            var errors = new List<string>();
+            this.ErrorHandler.New("Checking for valid input with parameters: " + inputRank + ", " + inputFile + ", " + tile, Level.Debug);
             // Errors that lead to other errors have to be caught seperately with ifs
             // Check if selected tile is inBounds and has a piece on it
             if (!this.board.InBounds(inputFile, inputRank))
             {
-                errors.Add("Selected tile not in bounds of the board");
+                this.ErrorHandler.New("Selected tile not in bounds of the board", Level.Warning);
             }
             // Check for non-fatal errors
             else
@@ -123,18 +127,24 @@ namespace Chess.Rules
                 if (tile == "origin")
                 {
                     // Check if file contains a piece
-                    if (!selectedTile.Occupied()) errors.Add("Tile does not contain a piece");
+                    if (!selectedTile.Occupied()) this.ErrorHandler.New("Tile does not contain a piece", Level.Warning);
                     // Piece selected doesn't correspond to turn 
-                    else if (selectedTile.piece.IsWhite() != currentTurn) errors.Add($"Cannot move this piece on {this.turn.ToString()}s turn");
+                    else if (selectedTile.piece.IsWhite() != currentTurn) this.ErrorHandler.New($"Cannot move this piece on {this.turn.ToString()}s turn", Level.Warning);
                 }
                 else if (tile == "target")
                 {
                     // Check if file contains a piece
-                    if (selectedTile.Occupied() && selectedTile.piece.color == currentTurn) errors.Add("Unable to move to a tile occupied by your own piece");
+                    if (selectedTile.Occupied() && selectedTile.piece.color == currentTurn) this.ErrorHandler.New("Unable to move to a tile occupied by your own piece", Level.Warning);
                 }
             }
 
-            if (ErrorHandler.IsEmpty()) return;
+            if (this.ErrorHandler.IsEmpty())
+            {
+                this.ErrorHandler.New("Error buffer was empty, succesfully validated input", Level.Debug);
+                this.ErrorHandler.Write();
+                return;
+            }
+            this.ErrorHandler.New("Error buffer NOT empty, input couldn't be validated", Level.Debug);
             this.GameLoop();
             return;
         }
