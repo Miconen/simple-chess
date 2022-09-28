@@ -175,6 +175,8 @@ namespace Chess.Chessboard
 
         public bool InBounds(char fileLetter, int rank)
         {
+            if (fileLetter == '0' && rank == 0) return false;
+
             int file = this.BOARD_LETTERS.IndexOf(Char.ToUpper(fileLetter)) + 1;
             if (rank < 0 || rank > this.BOARD_WIDTH) return false;
             if (file < 0 || file > this.BOARD_HEIGHT) return false;
