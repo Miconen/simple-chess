@@ -13,6 +13,8 @@ namespace Chess.Chessboard
 
         public Tile[,] Tiles;
 
+        public Move? LastMove;
+
         public Board()
         {
             this.BOARD_WIDTH = 8;
@@ -50,6 +52,9 @@ namespace Chess.Chessboard
             }
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
+
+            this.LastMove = move;
+
             // Remove piece from old tile
             move.fromTile.piece = null;
         }
@@ -124,6 +129,11 @@ namespace Chess.Chessboard
                     else
                     {
                         Console.BackgroundColor = ConsoleColor.White;
+                    }
+
+                    if (this.Tiles.Equals(this.LastMove))
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
                     }
 
                     if (currentTile.Occupied())
