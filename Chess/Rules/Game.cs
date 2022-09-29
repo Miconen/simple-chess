@@ -18,8 +18,8 @@ namespace Chess.Rules
 
         public Game()
         {
-            this.board = new Board();
             this.ErrorHandler = new ErrorHandler();
+            this.board = new Board(this.ErrorHandler);
             board.Populate();
             this.turn = new Turns(true);
             this.WhiteCapturedPieces = new CapturedPieces();
@@ -62,7 +62,7 @@ namespace Chess.Rules
             Tile toTile = board.GetTile(inputTo.rank, inputTo.file);
             this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})", Level.Info);
 
-            Move move = new Move(fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
+            Move move = new Move(this.ErrorHandler, fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
             // List of tiles (as coordinates) which the move travels through
             List<Tuple<int, int>> coordinateList = move.GetTileIndexesBetweenInputs();
             // Convert list of tiles to usable tile objects
