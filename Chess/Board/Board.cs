@@ -2,6 +2,7 @@ using System;
 using Chess;
 using Chess.Pieces;
 using Chess.Rules;
+using Chess.Error;
 
 namespace Chess.Chessboard
 {
@@ -10,17 +11,18 @@ namespace Chess.Chessboard
         public int BOARD_HEIGHT;
         public int BOARD_WIDTH;
         public List<char> BOARD_LETTERS;
+        public ErrorHandler ErrorHandler;
+        public Move LastMove;
 
         public Tile[,] Tiles;
 
-        public Move? LastMove;
-
-        public Board()
+        public Board(ErrorHandler ErrorHandler)
         {
             this.BOARD_WIDTH = 8;
             this.BOARD_HEIGHT = 8;
             this.BOARD_LETTERS = new List<char>();
             this.BOARD_LETTERS.AddRange("ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray());
+            this.ErrorHandler = ErrorHandler;
 
             // Initialize two dimensional board array
             Tiles = new Tile[this.BOARD_WIDTH, this.BOARD_HEIGHT];
