@@ -12,6 +12,7 @@ namespace Chess.Chessboard
         public int BOARD_WIDTH;
         public List<char> BOARD_LETTERS;
         public ErrorHandler ErrorHandler;
+        public Move LastMove;
 
         public Tile[,] Tiles;
 
@@ -53,6 +54,9 @@ namespace Chess.Chessboard
             }
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
+
+            this.LastMove = move;
+
             // Remove piece from old tile
             move.fromTile.piece = null;
         }
@@ -105,7 +109,6 @@ namespace Chess.Chessboard
             Console.Write("   ");
             if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
 
-
             for (int i = 7; i >= 0; i--)
             {
                 _boardPrintMargin(i);
@@ -128,6 +131,11 @@ namespace Chess.Chessboard
                     {
                         Console.BackgroundColor = ConsoleColor.White;
                     }
+
+                    // Set different background colors for previous move played
+                    if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                     if (currentTile.Occupied())
                     {
@@ -205,6 +213,10 @@ namespace Chess.Chessboard
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                 }
+
+                if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                 Console.Write("       ");
                 Console.ResetColor();
