@@ -107,7 +107,6 @@ namespace Chess.Chessboard
             Console.Write("   ");
             if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
 
-
             for (int i = 7; i >= 0; i--)
             {
                 _boardPrintMargin(i);
@@ -131,10 +130,10 @@ namespace Chess.Chessboard
                         Console.BackgroundColor = ConsoleColor.White;
                     }
 
-                    if (this.Tiles.Equals(this.LastMove))
-                    {
-                        Console.BackgroundColor = ConsoleColor.DarkGreen;
-                    }
+                    // Set different background colors for previous move played
+                    if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                     if (currentTile.Occupied())
                     {
@@ -212,6 +211,10 @@ namespace Chess.Chessboard
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                 }
+
+                if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                 Console.Write("       ");
                 Console.ResetColor();
