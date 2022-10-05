@@ -1,11 +1,14 @@
 using System;
 using Chess;
 using Chess.Chessboard;
+using Chess.Error;
+using Chess.Error.Levels;
 
 namespace Chess.Rules
 {
     public class Move
     {
+        public ErrorHandler ErrorHandler;
         public Tile fromTile;
         public Tile toTile;
         public int fromRank;
@@ -13,8 +16,9 @@ namespace Chess.Rules
         public int toRank;
         public int toFile;
 
-        public Move(Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile)
+        public Move(ErrorHandler ErrorHandler, Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile)
         {
+            this.ErrorHandler = ErrorHandler;
             this.fromTile = fromTile;
             this.toTile = toTile;
             this.fromRank = fromRank;
@@ -30,7 +34,7 @@ namespace Chess.Rules
             // Vertical movement
             if (this.fromFile == this.toFile)
             {
-                moveInfo += "Vertical move: ";
+                moveInfo += "Vertical move, tiles visited: ";
                 int i = this.fromRank;
                 while (i != this.toRank)
                 {
@@ -42,7 +46,7 @@ namespace Chess.Rules
             // Horizontal movement
             else if (this.fromRank == this.toRank)
             {
-                moveInfo += "Horizontal move: ";
+                moveInfo += "Horizontal move, tiles visited: ";
                 int i = this.fromFile;
                 while (i != this.toFile)
                 {
@@ -54,7 +58,7 @@ namespace Chess.Rules
             // Diagonal movement
             else
             {
-                moveInfo += "Diagonal move: ";
+                moveInfo += "Diagonal move, tiles visited: ";
                 int i = this.fromRank;
                 int ii = this.fromFile;
                 while (i != this.toRank && ii != this.toFile)
@@ -66,8 +70,7 @@ namespace Chess.Rules
                 }
             }
 
-            // TODO: Use ErrorHandler class to print this
-            Console.WriteLine(moveInfo);
+            this.ErrorHandler.New(moveInfo, Level.Debug);
 
             return list;
         }
@@ -80,6 +83,11 @@ namespace Chess.Rules
         public bool IsDiagonal()
         {
             return (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
+        }
+
+        public void AttachErrorHandler(ErrorHandler ErrorHandler)
+        {
+            this.ErrorHandler = ErrorHandler;
         }
     }
 }

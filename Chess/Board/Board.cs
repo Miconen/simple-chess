@@ -2,6 +2,7 @@ using System;
 using Chess;
 using Chess.Pieces;
 using Chess.Rules;
+using Chess.Error;
 
 namespace Chess.Chessboard
 {
@@ -10,15 +11,18 @@ namespace Chess.Chessboard
         public int BOARD_HEIGHT;
         public int BOARD_WIDTH;
         public List<char> BOARD_LETTERS;
+        public ErrorHandler ErrorHandler;
+        public Move LastMove;
 
         public Tile[,] Tiles;
 
-        public Board()
+        public Board(ErrorHandler ErrorHandler)
         {
             this.BOARD_WIDTH = 8;
             this.BOARD_HEIGHT = 8;
             this.BOARD_LETTERS = new List<char>();
             this.BOARD_LETTERS.AddRange("ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray());
+            this.ErrorHandler = ErrorHandler;
 
             // Initialize two dimensional board array
             Tiles = new Tile[this.BOARD_WIDTH, this.BOARD_HEIGHT];
@@ -50,6 +54,9 @@ namespace Chess.Chessboard
             }
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
+
+            this.LastMove = move;
+
             // Remove piece from old tile
             move.fromTile.piece = null;
         }
@@ -102,7 +109,6 @@ namespace Chess.Chessboard
             Console.Write("   ");
             if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
 
-
             for (int i = 7; i >= 0; i--)
             {
                 _boardPrintMargin(i);
@@ -125,6 +131,11 @@ namespace Chess.Chessboard
                     {
                         Console.BackgroundColor = ConsoleColor.White;
                     }
+
+                    // Set different background colors for previous move played
+                    if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                     if (currentTile.Occupied())
                     {
@@ -165,6 +176,8 @@ namespace Chess.Chessboard
 
         public bool InBounds(char fileLetter, int rank)
         {
+            if (fileLetter == '0' && rank == 0) return false;
+
             int file = this.BOARD_LETTERS.IndexOf(Char.ToUpper(fileLetter)) + 1;
             if (rank < 0 || rank > this.BOARD_WIDTH) return false;
             if (file < 0 || file > this.BOARD_HEIGHT) return false;
@@ -200,6 +213,10 @@ namespace Chess.Chessboard
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                 }
+
+                if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
+                if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
+
 
                 Console.Write("       ");
                 Console.ResetColor();

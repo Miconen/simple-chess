@@ -63,6 +63,7 @@ namespace Chess.Error
         public void Flush()
         {
             this._buffer.Clear(); 
+            this._printBuffer.Clear(); 
         }
 
         public bool IsEmpty()
@@ -132,7 +133,7 @@ namespace Chess.Error
         private void _printMessage(Level severity, string message, string formatStart)
         {
             string formatEnd = "\u001b[0m";
-            this._buffer.Add(
+            this._printBuffer.Add(
                 $"[{DateTime.Now.ToString("HH':'mm':'ss")}] ({formatStart + severity + formatEnd}) : {formatStart + message + formatEnd}"
             );
         }
