@@ -87,6 +87,37 @@ public class Board
         this.Renderer.Render(this.Tiles, BlackCapturedPieces, WhiteCapturedPieces);
     }
 
+    // Move piece to new tile, gets called AFTER move has been validated and is legal
+    public void Move(Move move, List<Piece> list, Turns turn)
+    {
+        // Add "eaten" pieces to corresponding lists
+        if (move.toTile.piece != null)
+        {
+            list.Add(move.toTile.piece);
+        }
+
+        // Move piece from old tile to new tile
+        move.toTile.piece = move.fromTile.piece;
+
+
+        // check if promote possible for white
+        if (turn.turnBool == true && move.toTile.rank == 7 && move.toTile.piece.ToString() == "P")
+        {
+            PromotePawn(move, turn);
+        }
+        // check if promote possible for black
+        if (turn.turnBool == false && move.toTile.rank == 0 && move.toTile.piece.ToString() == "P")
+        {
+            PromotePawn(move, turn);
+        }
+
+
+        this.LastMove = move;
+
+        // Remove piece from old tile
+        move.fromTile.piece = null;
+    }
+
     public void Populate()
     {
         for (int i = 0; i < this.BOARD_WIDTH; i++)
@@ -107,9 +138,6 @@ public class Board
         this.Tiles[0, 6].piece = new Knight(true);
         this.Tiles[0, 7].piece = new Rook(true);
 
-        // Test piece
-        this.Tiles[3, 3].piece = new Knight(true);
-
         // Black pieces
         this.Tiles[7, 0].piece = new Rook(false);
         this.Tiles[7, 1].piece = new Knight(false);
@@ -119,62 +147,6 @@ public class Board
         this.Tiles[7, 5].piece = new Bishop(false);
         this.Tiles[7, 6].piece = new Knight(false);
         this.Tiles[7, 7].piece = new Rook(false);
-    }
-
-    public void PrintBoard(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
-    {
-        int boardHeightCoordinates = 8;
-        _printBlackMaterialDifference(BlackCapturedPieces, WhiteCapturedPieces);
-
-        for (int i = 7; i >= 0; i--)
-        {
-            _boardPrintMargin(i);
-            Console.WriteLine();
-
-            // Rank, Height coordinates 
-            _boardStringPadding(boardHeightCoordinates);
-            boardHeightCoordinates--;
-
-            for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
-            {
-                _boardPrintContent(i, ii);
-            }
-            _boardPrintMargin(i);
-        }
-
-        // File, width coordinates
-        Console.WriteLine("\n\n          " + 'a' + "      " + 'b' + "      " + 'c' + "      " + 'd' + "      " + 'e' + "      " + 'f' + "      " + 'g' + "      " + 'h' + "\n");
-
-        _printWhiteMaterialDifference(BlackCapturedPieces, WhiteCapturedPieces);
-    }
-
-    public void PrintBoard(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces, Tile selectedTile)
-    {
-        int boardHeightCoordinates = 8;
-        bool[,] ValidMoves = selectedTile.piece.GetValidMoves(selectedTile, this.Tiles);
-
-        _printBlackMaterialDifference(BlackCapturedPieces, WhiteCapturedPieces);
-
-        for (int i = 7; i >= 0; i--)
-        {
-            _boardPrintMargin(i);
-            Console.WriteLine();
-
-            // Rank, Height coordinates 
-            _boardStringPadding(boardHeightCoordinates);
-            boardHeightCoordinates--;
-
-            for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
-            {
-                _boardPrintContent(i, ii, ValidMoves[i, ii]);
-            }
-            _boardPrintMargin(i);
-        }
-
-        // File, width coordinates
-        Console.WriteLine("\n\n          " + 'a' + "      " + 'b' + "      " + 'c' + "      " + 'd' + "      " + 'e' + "      " + 'f' + "      " + 'g' + "      " + 'h' + "\n");
-
-        _printWhiteMaterialDifference(BlackCapturedPieces, WhiteCapturedPieces);
     }
 
     public bool InBounds(char fileLetter, int rank)
@@ -207,130 +179,37 @@ public class Board
         return !isBlocked;
     }
 
-    private void _boardPrintMargin(int i)
+    public void PromotePawn(Move move, Turns turn)
     {
-
-        Console.WriteLine("");
-        Console.Write("       ");
-
-        for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
-        {
-
-            Tile currentTile = this.Tiles[i, ii];
-
-            if ((i + ii) % 2 == 0)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-            }
-            else
-            {
-                Console.BackgroundColor = ConsoleColor.White;
-            }
-
-            if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
-            if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
-
-            Console.Write("       ");
-            Console.ResetColor();
-        }
-    }
-
-    private void _printBlackMaterialDifference(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
-    {
-        // Print list of captured pieces and calculate difference in material sum
-        int materialDifference = WhiteCapturedPieces.CalculateMaterialSum() - BlackCapturedPieces.CalculateMaterialSum();
-        BlackCapturedPieces.PrintList();
-        Console.Write("   ");
-        if (materialDifference < 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
-    }
-
-    private void _printWhiteMaterialDifference(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
-    {
-        // Print captured list for White pieces
-        int materialDifference = WhiteCapturedPieces.CalculateMaterialSum() - BlackCapturedPieces.CalculateMaterialSum();
-        WhiteCapturedPieces.PrintList();
-        Console.Write("   ");
-        if (materialDifference > 0) Console.WriteLine($"+{Math.Abs(materialDifference)}");
+        move.toTile.piece = null;
         Console.WriteLine();
-    }
-
-    private void _boardSetBackground(int i, int ii)
-    {
-        Tile currentTile = this.Tiles[i, ii];
-
-        if ((i + ii) % 2 == 0)
+        Console.WriteLine("Promote to: knight(N), queen(Q), bishop(B), rook(R) ");
+        while (true)
         {
-            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Write("Input: ");
+            var userInput = Console.ReadLine();
+            if (userInput == "q" || userInput == "Q")
+            {
+                move.toTile.piece = new Queen(turn.turnBool);
+                return;
+            }
+            else if (userInput == "n" || userInput == "N")
+            {
+                move.toTile.piece = new Knight(turn.turnBool);
+                return;
+            }
+            else if (userInput == "b" || userInput == "B")
+            {
+                move.toTile.piece = new Bishop(turn.turnBool);
+                return;
+            }
+            else if (userInput == "r" || userInput == "R")
+            {
+                move.toTile.piece = new Rook(turn.turnBool);
+                return;
+            }
+            Console.WriteLine("Invalid input");
+            continue;
         }
-        else
-        {
-            Console.BackgroundColor = ConsoleColor.White;
-        }
-
-        // Set different background colors for previous move played
-        if (currentTile == this.LastMove?.fromTile) Console.BackgroundColor = ConsoleColor.DarkGreen;
-        if (currentTile == this.LastMove?.toTile) Console.BackgroundColor = ConsoleColor.Green;
-    }
-
-    private void _boardSetForeground(Tile currentTile)
-    {
-        if (currentTile.piece.color)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-        }
-    }
-
-    private void _boardPrintContent(int i, int ii, bool isValidMove = false)
-    {
-        Tile currentTile = this.Tiles[i, ii];
-
-        _boardSetBackground(i, ii);
-
-        if (currentTile.Occupied())
-        {
-            _boardSetForeground(currentTile);
-            _boardStringPadding(currentTile.piece.nameShort.ToString());
-        }
-        else if (isValidMove)
-        {
-            _boardPrintHighlightedMoves(i, ii);
-        }
-        else
-        {
-            _boardStringPadding();
-        }
-
-        Console.ResetColor();
-    }
-
-    private void _boardStringPadding(string content = " ", bool isValidMove = false)
-    {
-        const string SPACER = "   ";
-
-        Console.Write(SPACER);
-        if (isValidMove) Console.BackgroundColor = ConsoleColor.Cyan;
-        Console.Write(content);
-        Console.Write(SPACER);
-    }
-
-    private void _boardPrintHighlightedMoves(int i, int ii)
-    {
-        const string SPACER = "  ";
-
-        Console.Write(SPACER);
-        Console.BackgroundColor = ConsoleColor.Cyan;
-        Console.Write("   ");
-        _boardSetBackground(i, ii);
-        Console.Write(SPACER);
-    }
-
-    private void _boardStringPadding(int number)
-    {
-        string content = number.ToString();
-        _boardStringPadding(content);
     }
 }
