@@ -48,9 +48,14 @@ public class Knight : Piece
         // Check offset coordinates 
         foreach (var offset in knightHelper)
         {
-            bool IsValid = _validMoveHelper(board[x + offset.x, y + offset.y]);
-            if (!IsValid) break;
-            response[x + offset.x, y + offset.y] = IsValid;
+            int newX = x + offset.x;
+            int newY = y + offset.y;
+
+            // Prevent index out of bounds errors
+            if (newX < 0 || newY < 0) continue;
+            if (newX > 7 || newY > 7) continue;
+
+            response[newX, newY] = _validMoveHelper(board[newX, newY]);
         }
 
         return response;

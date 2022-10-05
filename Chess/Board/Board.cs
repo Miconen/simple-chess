@@ -53,26 +53,7 @@ public class Board
     {
         // Substract one from rank since it's currently the same as user input
         // After substraction we can use it as an array/list index
-        return this.Tiles[rank - 1, file - 1];
-    }
-
-    // Move piece to new tile, gets called AFTER move has been validated and is legal
-    public void Move(Move move, List<Piece> list)
-    {
-        // Add "eaten" pieces to corresponding list
-        if (move.toTile.piece != null)
-        {
-            list.Add(move.toTile.piece);
-        }
-        // Move piece from old tile to new tile
-        move.toTile.piece = move.fromTile.piece;
-
-        // TODO: Determine if we need this duplication and where will this end up?
-        this.LastMove = move;
-        this.Renderer.LastMove = move;
-
-        // Remove piece from old tile
-        move.fromTile.piece = null;
+        return this.Tiles[rank, file];
     }
 
     // With selected fromTile
@@ -111,8 +92,9 @@ public class Board
             PromotePawn(move, turn);
         }
 
-
+        // TODO: Determine if we need this duplication and where will this end up?
         this.LastMove = move;
+        this.Renderer.LastMove = move;
 
         // Remove piece from old tile
         move.fromTile.piece = null;

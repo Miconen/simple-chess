@@ -66,7 +66,7 @@ public class Game
         // Check if the move is valid and not blocked
         if (fromTile.piece.IsValidMove(move) && board.MoveIsPossible(move))
         {
-            this.board.Move(move, this.GetCapturedList());
+            this.board.Move(move, this.GetCapturedList(), this.turn);
             this.turn.SwitchTurn();
         }
 
