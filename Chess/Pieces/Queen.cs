@@ -15,9 +15,7 @@ namespace Chess.Pieces
 
         public override bool IsValidMove(Move move)
         {
-            bool validMove = (move.IsDiagonal() || move.IsPerpendicular());
-            if (!validMove) return false;
-            return true;
+            return (move.IsDiagonal() || move.IsPerpendicular());
         }
     }
 }

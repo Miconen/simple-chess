@@ -3,6 +3,7 @@ using Chess;
 using Chess.Pieces;
 using Chess.Rules;
 using Chess.Error;
+using Chess.Error.Levels;
 
 namespace Chess.Chessboard
 {
@@ -169,11 +170,21 @@ namespace Chess.Chessboard
         public List<Tile> CoordinateListToTiles(List<Tuple<int, int>> coordinates)
         {
             var tiles = new List<Tile>();
-            foreach (Tuple<int, int> tuple in coordinates)
+            foreach (var tuple in coordinates)
             {
                 tiles.Add(this.GetTile(tuple.Item1, (char)tuple.Item2));
             }
             return tiles;
+        }
+
+        public bool MoveIsPossible(Move move)
+        {
+            // Convert list of coordinates to usable tile objects
+            List<Tile> tiles = this.CoordinateListToTiles(move.GetTileIndexesBetweenInputs());
+            // Check if a piece is blocked, bypass if move has ghosting AKA is allowed to move over other pieces
+            bool isBlocked = (move.fromTile.piece.ghosting) ? false : move.IsBlocked(tiles);
+            if (isBlocked) this.ErrorHandler.New("Move was blocked by another piece", Level.Warning);
+            return !isBlocked;
         }
 
         private void _boardPrintMargin(int i)

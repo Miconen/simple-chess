@@ -64,24 +64,14 @@ namespace Chess.Rules
             Tile toTile = board.GetTile(inputTo.rank, inputTo.file);
             this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} {fromTile.piece.nameShort} from ({inputFrom.file}{inputFrom.rank}) to ({inputTo.file}{inputTo.rank})", Level.Info);
 
-            Move move = new Move(this.ErrorHandler, fromTile, toTile, inputFrom.rank, inputFrom.file, inputTo.rank, inputTo.file);
-            // List of tiles (as coordinates) which the move travels through
-            List<Tuple<int, int>> coordinateList = move.GetTileIndexesBetweenInputs();
-            // Convert list of tiles to usable tile objects
-            List<Tile> tiles = this.board.CoordinateListToTiles(coordinateList);
+            Move move = new Move(this.ErrorHandler, fromTile, toTile);
 
-            // Check if a piece is blocked, bypass if move has ghosting AKA is allowed to move over other pieces
-            bool isBlocked = (fromTile.piece.ghosting) ? false : fromTile.piece.IsBlocked(tiles);
-            // Check if the move is valid according to it's movement rules
-            bool isValid = fromTile.piece.IsValidMove(move);
-
-            if (isValid && !isBlocked)
+            // Check if the move is valid and not blocked
+            if (fromTile.piece.IsValidMove(move) && board.MoveIsPossible(move))
             {
                 this.board.Move(move, this.GetCapturedList());
                 this.turn.SwitchTurn();
             }
-            if (!isValid) this.ErrorHandler.New("Move was not valid", Level.Warning);
-            if (isBlocked) this.ErrorHandler.New("Move was blocked by another piece", Level.Warning);
 
 
             this.GameLoop();
@@ -92,6 +82,7 @@ namespace Chess.Rules
             if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces.List;
             else return ref this.BlackCapturedPieces.List;
         }
+
 
         private (char file, int rank) _getValidInput(string message)
         {

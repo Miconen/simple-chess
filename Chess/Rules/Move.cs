@@ -16,15 +16,19 @@ namespace Chess.Rules
         public int toRank;
         public int toFile;
 
-        public Move(ErrorHandler ErrorHandler, Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile) 
+        public Move(ErrorHandler ErrorHandler, Tile fromTile, Tile toTile) 
         {
             this.ErrorHandler = ErrorHandler;
             this.fromTile = fromTile;
             this.toTile = toTile;
-            this.fromRank = fromRank;
-            this.fromFile = fromFile;
-            this.toRank = toRank;
-            this.toFile = toFile;
+            /* this.fromRank = fromRank; */
+            /* this.fromFile = fromFile; */
+            /* this.toRank = toRank; */
+            /* this.toFile = toFile; */
+            this.fromRank = fromTile.rank;
+            this.fromFile = fromTile.file;
+            this.toRank = toTile.rank;
+            this.toFile = toTile.file;
         }
 
         public List<Tuple<int, int>> GetTileIndexesBetweenInputs()
@@ -85,9 +89,25 @@ namespace Chess.Rules
             return (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
         }
 
-        public void AttachErrorHandler(ErrorHandler ErrorHandler)
+        public bool IsBlocked(List<Tile> list)
         {
-            this.ErrorHandler = ErrorHandler;
+            bool response = false;
+            Tile targetTile = list[list.Count - 1];
+
+            // Check if both tiles have pieces on them
+            if (targetTile.Occupied())
+            {
+                // Compared if existing pieces are of different color
+                if (this.fromTile.piece.color != this.targetTile.piece.color) return false;
+            }
+
+            // Loop over all tiles in between a move checking if they are occupied
+            foreach (Tile tile in list)
+            {
+                // If piece is not null but type of Piece, we return true
+                if (tile.Occupied()) response = true;
+            }
+            return response;
         }
     }
 }
