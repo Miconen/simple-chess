@@ -51,6 +51,8 @@ namespace Chess.Rules
             this.CheckValidInput(inputFrom.rank, inputFrom.file, "origin");
             // Selected tile
             Tile fromTile = board.GetTile(inputFrom.rank, inputFrom.file);
+
+            this.board.PrintBoard(BlackCapturedPieces, WhiteCapturedPieces, fromTile);
             this.ErrorHandler.New($"{fromTile.piece.GetColor(true)} selected ({fromTile.piece.nameShort}) on ({inputFrom.file}{inputFrom.rank})", Level.Info);
 
             // Let the user select a tile to move from
@@ -75,7 +77,7 @@ namespace Chess.Rules
 
             if (isValid && !isBlocked)
             {
-                this.board.Move(move, this._getCapturedList());
+                this.board.Move(move, this.GetCapturedList());
                 this.turn.SwitchTurn();
             }
             if (!isValid) this.ErrorHandler.New("Move was not valid", Level.Warning);
@@ -83,6 +85,12 @@ namespace Chess.Rules
 
 
             this.GameLoop();
+        }
+
+        public ref List<Piece> GetCapturedList()
+        {
+            if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces.List;
+            else return ref this.BlackCapturedPieces.List;
         }
 
         private (char file, int rank) _getValidInput(string message)
@@ -176,11 +184,6 @@ namespace Chess.Rules
             this.ErrorHandler.New("Error buffer NOT empty, input couldn't be validated", Level.Debug);
             this.GameLoop();
             return;
-        }
-        private ref List<Piece> _getCapturedList()
-        {
-            if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces.List;
-            else return ref this.BlackCapturedPieces.List;
         }
     }
 }

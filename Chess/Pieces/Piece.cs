@@ -69,6 +69,14 @@ namespace Chess.Pieces
         {
             return Char.ToString(this.nameShort);
         }
+
+        public virtual bool[,] GetValidMoves(Tile tile, Tile[,] board)
+        {
+            // Initialize two dimensional bool array
+            bool[,] response = new bool[8, 8];
+
+            return response;
+        }
     }
 
 }
