@@ -1,4 +1,4 @@
-namespace Chess.Error.Levels {
+namespace Chess.Logging.Levels {
     [Flags]
     public enum Level {
         None = 0,

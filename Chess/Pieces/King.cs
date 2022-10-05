@@ -1,14 +1,10 @@
-using System;
-using Chess;
+namespace Chess.Pieces;
 
-namespace Chess.Pieces
+public class King : Piece
 {
-    public class King : Piece
+    public King(bool color)
     {
-        public King(bool color)
-        {
-            this.color = color;
-            this.nameShort = 'K';
-        }
+        this.color = color;
+        this.nameShort = 'K';
     }
 }
