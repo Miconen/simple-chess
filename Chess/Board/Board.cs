@@ -45,15 +45,29 @@ namespace Chess.Chessboard
         }
 
         // Move piece to new tile, gets called AFTER move has been validated and is legal
-        public void Move(Move move, List<Piece> list)
+        public void Move(Move move, List<Piece> list, Turns turn)
         {
-            // Add "eaten" pieces to corresponding list
+            // Add "eaten" pieces to corresponding lists
             if (move.toTile.piece != null)
             {
                 list.Add(move.toTile.piece);
             }
+
             // Move piece from old tile to new tile
             move.toTile.piece = move.fromTile.piece;
+
+
+            // check if promote possible for white
+            if (turn.turnBool == true && move.toTile.rank == 7 && move.toTile.piece.ToString() == "P")
+            {
+                PromotePawn(move, turn);
+            }
+            // check if promote possible for black
+            if (turn.turnBool == false && move.toTile.rank == 0 && move.toTile.piece.ToString() == "P")
+            {
+                PromotePawn(move, turn);
+            }
+
 
             this.LastMove = move;
 
@@ -220,6 +234,41 @@ namespace Chess.Chessboard
 
                 Console.Write("       ");
                 Console.ResetColor();
+            }
+        }
+
+        public void PromotePawn(Move move, Turns turn)
+        {
+            move.toTile.piece = null;
+            Console.WriteLine();
+            Console.WriteLine("Promote to: knight(N), queen(Q), bishop(B), rook(R) ");
+            while (true)
+            {
+                Console.Write("Input: ");
+                var userInput = Console.ReadLine();
+                if (userInput == "q" || userInput == "Q")
+                {
+                    move.toTile.piece = new Queen(turn.turnBool);
+                    return;
+                }
+                else if (userInput == "n" || userInput == "N")
+                {
+                    move.toTile.piece = new Knight(turn.turnBool);
+                    return;
+                }
+                else if (userInput == "b" || userInput == "B")
+                {
+                    move.toTile.piece = new Bishop(turn.turnBool);
+                    return;
+                }
+                else if (userInput == "r" || userInput == "R")
+                {
+                    move.toTile.piece = new Rook(turn.turnBool);
+                    return;
+                }
+                Console.WriteLine("Invalid input");
+                continue;
+
             }
         }
     }

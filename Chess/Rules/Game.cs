@@ -16,6 +16,7 @@ namespace Chess.Rules
         public CapturedPieces WhiteCapturedPieces;
         public CapturedPieces BlackCapturedPieces;
 
+
         public Game()
         {
             this.ErrorHandler = new ErrorHandler();
@@ -75,7 +76,7 @@ namespace Chess.Rules
 
             if (isValid && !isBlocked)
             {
-                this.board.Move(move, this._getCapturedList());
+                this.board.Move(move, this._getCapturedList(), turn);
                 this.turn.SwitchTurn();
             }
             if (!isValid) this.ErrorHandler.New("Move was not valid", Level.Warning);
@@ -98,7 +99,7 @@ namespace Chess.Rules
             }
 
             // Break out of game loop check
-            if (input == "break") 
+            if (input == "break")
             {
                 this.ErrorHandler.New("Exiting game on break command", Level.Info);
                 return ('0', -1);
