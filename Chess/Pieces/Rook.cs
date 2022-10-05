@@ -1,7 +1,6 @@
 using System;
 using Chess;
 using Chess.Rules;
-using Chess.Chessboard;
 
 namespace Chess.Pieces
 {
@@ -18,26 +17,6 @@ namespace Chess.Pieces
         {
             if (!move.IsPerpendicular()) return false;
             return true;
-        }
-
-        public override List<(int, int)> GetValidTiles(Tile fromTile, Tile[,] tiles)
-        {
-            var ValidTiles = new List<(int, int)>();
-            for (int i = 0; i < 7; i++)
-            {
-                for (int ii = 0; ii < 7; ii++)
-                {
-                    Tile currentTile = tiles[i, ii];
-                    // Determine if valid move tile
-
-                    if (currentTile.Occupied()) continue;
-
-
-                    // jos valid move niin
-                    ValidTiles.Add((i, ii));
-                }
-            }
-            return ValidTiles;
         }
     }
 }
