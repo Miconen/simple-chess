@@ -44,30 +44,6 @@ namespace Chess.Pieces
             return true;
         }
 
-        public virtual List<(int, int)> GetValidTiles(Tile fromTile, Tile[,] tiles)
-        {
-            var ValidTiles = new List<(int, int)>();
-            for (int i = fromTile.file; i < 7; i++)
-            {
-                for (int ii = fromTile.rank; ii < 7; ii++)
-                {
-                    Tile currentTile = tiles[i, ii];
-                    // Determine if valid move tile
-
-
-
-                    if (currentTile.Occupied()) continue;
-
-
-
-                    // jos valid move niin
-                    ValidTiles.Add((i, ii));
-                }
-            }
-            return ValidTiles;
-        }
-
-
         public bool IsBlocked(List<Tile> list)
         {
             bool response = false;
