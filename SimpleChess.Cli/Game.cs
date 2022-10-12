@@ -1,13 +1,18 @@
 using System;
-using Chess.Chessboard;
-using Chess.Pieces;
-using Chess.Logging;
 
-namespace Chess.Rules;
+using SimpleChess.Chessboard;
+using SimpleChess.Pieces;
+using SimpleChess.Logging;
+using SimpleChess.Rules;
+
+using SimpleChess.Cli.Renderer;
+
+namespace SimpleChess.Cli.Game;
 
 public class Game
 {
     public Board board { get; }
+    public BoardRenderer Renderer;
     public Logger Logger;
     public Turns turn;
     public CapturedPieces WhiteCapturedPieces;
@@ -17,10 +22,12 @@ public class Game
     {
         this.Logger = new Logger();
         this.board = new Board(this.Logger);
-        board.Populate();
+        this.board.Populate();
         this.turn = new Turns(true);
         this.WhiteCapturedPieces = new CapturedPieces();
         this.BlackCapturedPieces = new CapturedPieces();
+
+        this.Renderer = new BoardRenderer(this.board);
     }
 
     public void Start()
@@ -34,7 +41,7 @@ public class Game
 
     public void GameLoop()
     {
-        this.board.Render(BlackCapturedPieces, WhiteCapturedPieces);
+        this.Renderer.Render(BlackCapturedPieces, WhiteCapturedPieces);
 
         // Write errors from previous run here
         // This prevents them from getting cleared earlier
@@ -49,7 +56,7 @@ public class Game
         // Selected tile
         Tile fromTile = board.GetTile(inputFrom.rank, inputFrom.file);
 
-        this.board.Render(BlackCapturedPieces, WhiteCapturedPieces, fromTile);
+        this.Renderer.Render(BlackCapturedPieces, WhiteCapturedPieces, fromTile);
         this.Logger.Info($"{fromTile.piece.GetColor(true)} selected ({fromTile.piece.nameShort}) on ({inputFrom.file}{inputFrom.rank})");
 
         // Let the user select a tile to move from
@@ -67,11 +74,47 @@ public class Game
         if (fromTile.piece.IsValidMove(move) && board.MoveIsPossible(move))
         {
             this.board.Move(move, this.GetCapturedList(), this.turn);
+            if (this.board.canBlackPromote(move, this.turn) || this.board.canWhitePromote(move, this.turn)) {
+                promoteInput(move, this.turn);
+            }
             this.turn.SwitchTurn();
         }
 
-
         this.GameLoop();
+    }
+
+    public void promoteInput(Move move, Turns turns)
+    {
+        move.toTile.piece = null;
+        Console.WriteLine();
+        Console.WriteLine("Promote to: knight(N), queen(Q), bishop(B), rook(R) ");
+        while (true)
+        {
+            Console.Write("Input: ");
+            var userInput = Console.ReadLine();
+            if (userInput == "q" || userInput == "Q")
+            {
+                this.board.PromotePawn(move, turns, PromoteEnum.Queen);
+                return;
+            }
+            else if (userInput == "n" || userInput == "N")
+            {
+                this.board.PromotePawn(move, turns, PromoteEnum.Knight);
+                return;
+            }
+            else if (userInput == "b" || userInput == "B")
+            {
+                this.board.PromotePawn(move, turns, PromoteEnum.Bishop);
+                return;
+            }
+            else if (userInput == "r" || userInput == "R")
+            {
+                this.board.PromotePawn(move, turns, PromoteEnum.Rook);
+                return;
+            }
+            Console.WriteLine("Invalid input");
+            continue;
+        }
     }
 
     public ref List<Piece> GetCapturedList()

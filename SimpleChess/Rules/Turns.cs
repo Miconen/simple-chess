@@ -1,7 +1,7 @@
 using System;
-using Chess.Chessboard;
+using SimpleChess.Chessboard;
 
-namespace Chess.Rules;
+namespace SimpleChess.Rules;
 
 public class Turns 
 {

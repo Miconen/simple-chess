@@ -1,6 +1,6 @@
-using Chess.Pieces;
+using SimpleChess.Pieces;
 
-namespace Chess.Chessboard;
+namespace SimpleChess.Chessboard;
 
 public class Tile
 {

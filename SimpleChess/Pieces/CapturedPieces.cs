@@ -1,6 +1,6 @@
-using Chess.Rules;
+using SimpleChess.Rules;
 
-namespace Chess.Pieces;
+namespace SimpleChess.Pieces;
 
 public class CapturedPieces
 {

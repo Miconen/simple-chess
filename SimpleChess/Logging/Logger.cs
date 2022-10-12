@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Chess.Logging.Levels;
+using SimpleChess.Logging.Levels;
 
-namespace Chess.Logging;
+namespace SimpleChess.Logging;
 
 public class Logger
 {

@@ -1,7 +1,7 @@
-using Chess.Rules;
-using Chess.Chessboard;
+using SimpleChess.Rules;
+using SimpleChess.Chessboard;
 
-namespace Chess.Pieces;
+namespace SimpleChess.Pieces;
 
 public class Rook : Piece
 {

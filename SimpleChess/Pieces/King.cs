@@ -1,4 +1,4 @@
-namespace Chess.Pieces;
+namespace SimpleChess.Pieces;
 
 public class King : Piece
 {
