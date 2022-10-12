@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChess", "SimpleChess\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChess.Cli", "SimpleChess.Cli\SimpleChess.Cli.csproj", "{7C5DB5FD-933D-4CD5-A9C7-E482AD699BB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChess.Tests", "SimpleChess.Tests\SimpleChess.Tests.csproj", "{3CECCFD2-B640-48A6-BDE4-39E4FB241A72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7C5DB5FD-933D-4CD5-A9C7-E482AD699BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C5DB5FD-933D-4CD5-A9C7-E482AD699BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C5DB5FD-933D-4CD5-A9C7-E482AD699BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CECCFD2-B640-48A6-BDE4-39E4FB241A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CECCFD2-B640-48A6-BDE4-39E4FB241A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CECCFD2-B640-48A6-BDE4-39E4FB241A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CECCFD2-B640-48A6-BDE4-39E4FB241A72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
