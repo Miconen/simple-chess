@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Chess.Pieces;
-using Chess.Rules;
-using Chess.Logging;
-using Chess.Logging.Levels;
 
-namespace Chess.Chessboard;
+using SimpleChess.Pieces;
+using SimpleChess.Rules;
+using SimpleChess.Logging;
+
+namespace SimpleChess.Chessboard;
 
 public class Board
 {
@@ -13,7 +13,6 @@ public class Board
     public int BOARD_WIDTH;
     public List<char> BOARD_LETTERS;
     public Logger Logger;
-    public BoardRenderer Renderer;
     public Move LastMove;
     public Tile[,] Tiles;
 
@@ -35,8 +34,6 @@ public class Board
                 this.Tiles[i, ii] = new Tile(i, ii);
             }
         }
-
-        this.Renderer = new BoardRenderer(this.BOARD_HEIGHT, this.BOARD_WIDTH, this.Tiles);
     }
 
     // Used when dealing with user input in which case the other input will be a char
@@ -56,18 +53,6 @@ public class Board
         return this.Tiles[rank, file];
     }
 
-    // With selected fromTile
-    public void Render(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces, Tile fromTile)
-    {
-        this.Renderer.Render(this.Tiles, BlackCapturedPieces, WhiteCapturedPieces, fromTile);
-    }
-
-    // Without a selected tile
-    public void Render(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
-    {
-        this.Renderer.Render(this.Tiles, BlackCapturedPieces, WhiteCapturedPieces);
-    }
-
     // Move piece to new tile, gets called AFTER move has been validated and is legal
     public void Move(Move move, List<Piece> list, Turns turn)
     {
@@ -80,24 +65,18 @@ public class Board
         // Move piece from old tile to new tile
         move.toTile.piece = move.fromTile.piece;
 
-
-        // check if promote possible for white
-        if (turn.turnBool == true && move.toTile.rank == 7 && move.toTile.piece.ToString() == "P")
-        {
-            PromotePawn(move, turn);
-        }
-        // check if promote possible for black
-        if (turn.turnBool == false && move.toTile.rank == 0 && move.toTile.piece.ToString() == "P")
-        {
-            PromotePawn(move, turn);
-        }
-
-        // TODO: Determine if we need this duplication and where will this end up?
         this.LastMove = move;
-        this.Renderer.LastMove = move;
 
         // Remove piece from old tile
         move.fromTile.piece = null;
+    }
+
+    public bool canWhitePromote(Move move, Turns turn) {
+        return turn.turnBool == true && move.toTile.rank == 7 && move.toTile.piece.ToString() == "P";
+    }
+
+    public bool canBlackPromote(Move move, Turns turn) {
+        return turn.turnBool == false && move.toTile.rank == 0 && move.toTile.piece.ToString() == "P";
     }
 
     public void Populate()
@@ -161,37 +140,28 @@ public class Board
         return !isBlocked;
     }
 
-    public void PromotePawn(Move move, Turns turn)
+    public void PromotePawn(Move move, Turns turn, PromoteEnum promote)
     {
         move.toTile.piece = null;
-        Console.WriteLine();
-        Console.WriteLine("Promote to: knight(N), queen(Q), bishop(B), rook(R) ");
-        while (true)
+        if (promote is PromoteEnum.Queen)
         {
-            Console.Write("Input: ");
-            var userInput = Console.ReadLine();
-            if (userInput == "q" || userInput == "Q")
-            {
-                move.toTile.piece = new Queen(turn.turnBool);
-                return;
-            }
-            else if (userInput == "n" || userInput == "N")
-            {
-                move.toTile.piece = new Knight(turn.turnBool);
-                return;
-            }
-            else if (userInput == "b" || userInput == "B")
-            {
-                move.toTile.piece = new Bishop(turn.turnBool);
-                return;
-            }
-            else if (userInput == "r" || userInput == "R")
-            {
-                move.toTile.piece = new Rook(turn.turnBool);
-                return;
-            }
-            Console.WriteLine("Invalid input");
-            continue;
+            move.toTile.piece = new Queen(turn.turnBool);
+            return;
+        }
+        else if (promote is PromoteEnum.Knight)
+        {
+            move.toTile.piece = new Knight(turn.turnBool);
+            return;
+        }
+        else if (promote is PromoteEnum.Bishop)
+        {
+            move.toTile.piece = new Bishop(turn.turnBool);
+            return;
+        }
+        else if (promote is PromoteEnum.Rook)
+        {
+            move.toTile.piece = new Rook(turn.turnBool);
+            return;
         }
     }
 }

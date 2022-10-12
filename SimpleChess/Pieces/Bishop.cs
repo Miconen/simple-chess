@@ -1,8 +1,8 @@
 using System;
-using Chess.Rules;
-using Chess.Chessboard;
+using SimpleChess.Rules;
+using SimpleChess.Chessboard;
 
-namespace Chess.Pieces;
+namespace SimpleChess.Pieces;
 
 public class Bishop : Piece
 {

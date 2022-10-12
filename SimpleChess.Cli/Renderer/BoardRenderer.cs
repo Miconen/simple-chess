@@ -1,35 +1,31 @@
 using System;
 using System.Collections.Generic;
-using Chess.Rules;
-using Chess.Pieces;
+using SimpleChess.Rules;
+using SimpleChess.Chessboard;
+using SimpleChess.Pieces;
 
-namespace Chess.Chessboard;
+namespace SimpleChess.Cli.Renderer;
 
 public class BoardRenderer
 {
+    public Board board;
     public List<char> BOARD_LETTERS;
     public Move LastMove;
-    public int BOARD_HEIGHT;
-    public int BOARD_WIDTH;
-    public Tile[,] Tiles;
 
-    public BoardRenderer(int BOARD_HEIGHT, int BOARD_WIDTH, Tile[,] Tiles)
+    public BoardRenderer(Board board)
     {
         this.BOARD_LETTERS = new List<char>();
         this.BOARD_LETTERS.AddRange("ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray());
-        this.BOARD_HEIGHT = BOARD_HEIGHT;
-        this.BOARD_WIDTH = BOARD_WIDTH;
-        this.Tiles = Tiles;
+        this.board = board;
     }
 
-    public void Render(Tile[,] Tiles, CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
+    public void Render(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces)
     {
-        this.Render(Tiles, BlackCapturedPieces, WhiteCapturedPieces, new Tile(0, 0));
+        this.Render(BlackCapturedPieces, WhiteCapturedPieces, new Tile(0, 0));
     }
 
-    public void Render(Tile[,] Tiles, CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces, Tile selectedTile)
+    public void Render(CapturedPieces BlackCapturedPieces, CapturedPieces WhiteCapturedPieces, Tile selectedTile)
     {
-        this.Tiles = Tiles;
         // Initialize valid move tiles, defaults to false
         bool[,] ValidMoves = new bool[8, 8];
 
@@ -37,12 +33,12 @@ public class BoardRenderer
         if (selectedTile.rank != 0 && selectedTile.file != 0)
         {
             // Determine valid move tiles only if render was provided a selected tile
-            ValidMoves = selectedTile.piece.GetValidMoves(selectedTile, this.Tiles);
+            ValidMoves = selectedTile.piece.GetValidMoves(selectedTile, this.board.Tiles);
         }
 
         _printBlackMaterialDifference(BlackCapturedPieces, WhiteCapturedPieces);
 
-        for (int i = this.BOARD_HEIGHT - 1; i >= 0; i--)
+        for (int i = this.board.BOARD_HEIGHT - 1; i >= 0; i--)
         {
             _boardPrintMargin(i);
             Console.WriteLine();
@@ -50,7 +46,7 @@ public class BoardRenderer
             // Rank, Height coordinates 
             _boardStringPadding(i + 1);
 
-            for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
+            for (int ii = 0; ii < this.board.BOARD_WIDTH; ii++)
             {
                 _boardPrintContent(i, ii, ValidMoves[i, ii]);
             }
@@ -68,10 +64,10 @@ public class BoardRenderer
         Console.WriteLine();
         Console.Write("       ");
 
-        for (int ii = 0; ii < this.BOARD_WIDTH; ii++)
+        for (int ii = 0; ii < this.board.BOARD_WIDTH; ii++)
         {
 
-            Tile currentTile = this.Tiles[i, ii];
+            Tile currentTile = this.board.Tiles[i, ii];
 
             if ((i + ii) % 2 == 0)
             {
@@ -111,7 +107,7 @@ public class BoardRenderer
 
     private void _boardSetBackground(int i, int ii)
     {
-        Tile currentTile = this.Tiles[i, ii];
+        Tile currentTile = this.board.Tiles[i, ii];
 
         if ((i + ii) % 2 == 0)
         {
@@ -141,7 +137,7 @@ public class BoardRenderer
 
     private void _boardPrintContent(int i, int ii, bool isValidMove = false)
     {
-        Tile currentTile = this.Tiles[i, ii];
+        Tile currentTile = this.board.Tiles[i, ii];
 
         _boardSetBackground(i, ii);
 

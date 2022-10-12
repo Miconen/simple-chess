@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Chess.Chessboard;
-using Chess.Logging;
-using Chess.Logging.Levels;
+using SimpleChess.Chessboard;
+using SimpleChess.Logging;
+using SimpleChess.Logging.Levels;
 
-namespace Chess.Rules;
+namespace SimpleChess.Rules;
 
 public class Move
 {
