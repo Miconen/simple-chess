@@ -1,15 +1,12 @@
-﻿using System;
-using Chess;
-using Chess.Rules;
+﻿using Chess.Rules;
 
-namespace Chess
+namespace Chess;
+
+public class Chess
 {
-    public class Chess
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Game game = new Game();
-            game.Start();
-        }
+        Game game = new Game();
+        game.Start();
     }
 }

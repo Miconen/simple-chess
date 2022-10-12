@@ -1,93 +1,100 @@
 using System;
-using Chess;
+using System.Collections.Generic;
 using Chess.Chessboard;
-using Chess.Error;
-using Chess.Error.Levels;
+using Chess.Logging;
+using Chess.Logging.Levels;
 
-namespace Chess.Rules
+namespace Chess.Rules;
+
+public class Move
 {
-    public class Move
+    public Logger Logger;
+    public Tile fromTile;
+    public Tile toTile;
+
+    public Move(Logger Logger, Tile fromTile, Tile toTile) 
     {
-        public ErrorHandler ErrorHandler;
-        public Tile fromTile;
-        public Tile toTile;
-        public int fromRank;
-        public int fromFile;
-        public int toRank;
-        public int toFile;
+        this.Logger = Logger;
+        this.fromTile = fromTile;
+        this.toTile = toTile;
+    }
 
-        public Move(ErrorHandler ErrorHandler, Tile fromTile, Tile toTile, int fromRank, int fromFile, int toRank, int toFile) 
+    public List<Tuple<int, int>> GetTileIndexesBetweenInputs()
+    {
+        var list = new List<Tuple<int, int>>();
+        string moveInfo = "";
+        // Vertical movement
+        if (this.fromTile.file == this.toTile.file)
         {
-            this.ErrorHandler = ErrorHandler;
-            this.fromTile = fromTile;
-            this.toTile = toTile;
-            this.fromRank = fromRank;
-            this.fromFile = fromFile;
-            this.toRank = toRank;
-            this.toFile = toFile;
-        }
-
-        public List<Tuple<int, int>> GetTileIndexesBetweenInputs()
-        {
-            var list = new List<Tuple<int, int>>();
-            string moveInfo = "";
-            // Vertical movement
-            if (this.fromFile == this.toFile)
+            moveInfo += "Vertical move, tiles visited: ";
+            int i = this.fromTile.rank;
+            while(i != this.toTile.rank)
             {
-                moveInfo += "Vertical move, tiles visited: ";
-                int i = this.fromRank;
-                while(i != this.toRank)
-                {
-                    i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
-                    moveInfo += "[" + this.fromRank + " " + i + "] ";
-                    list.Add(new Tuple<int, int>(i, this.fromFile));
-                }
+                i = (this.fromTile.rank > this.toTile.rank) ? i - 1 : i + 1;
+                moveInfo += "[" + this.fromTile.rank + " " + i + "] ";
+                list.Add(new Tuple<int, int>(i, this.fromTile.file));
             }
-            // Horizontal movement
-            else if (this.fromRank == this.toRank)
+        }
+        // Horizontal movement
+        else if (this.fromTile.rank == this.toTile.rank)
+        {
+            moveInfo += "Horizontal move, tiles visited: ";
+            int i = this.fromTile.file;
+            while(i != this.toTile.file)
             {
-                moveInfo += "Horizontal move, tiles visited: ";
-                int i = this.fromFile;
-                while(i != this.toFile)
-                {
-                    i = (this.fromFile > this.toFile) ? i - 1 : i + 1;
-                    moveInfo += "[" + this.fromFile + " " + i + "] ";
-                    list.Add(new Tuple<int, int>(this.fromRank, i));
-                }
+                i = (this.fromTile.file > this.toTile.file) ? i - 1 : i + 1;
+                moveInfo += "[" + this.fromTile.file + " " + i + "] ";
+                list.Add(new Tuple<int, int>(this.fromTile.rank, i));
             }
-            // Diagonal movement
-            else
+        }
+        // Diagonal movement
+        else
+        {
+            moveInfo += "Diagonal move, tiles visited: ";
+            int i = this.fromTile.rank;
+            int ii = this.fromTile.file;
+            while(i != this.toTile.rank && ii != this.toTile.file)
             {
-                moveInfo += "Diagonal move, tiles visited: ";
-                int i = this.fromRank;
-                int ii = this.fromFile;
-                while(i != this.toRank && ii != this.toFile)
-                {
-                    i = (this.fromRank > this.toRank) ? i - 1 : i + 1;
-                    ii = (this.fromFile > this.toFile) ? ii - 1 : ii + 1;
-                    moveInfo += "[" + ii + " " + i + "] ";
-                    list.Add(new Tuple<int, int>(i, ii));
-                }
+                i = (this.fromTile.rank > this.toTile.rank) ? i - 1 : i + 1;
+                ii = (this.fromTile.file > this.toTile.file) ? ii - 1 : ii + 1;
+                moveInfo += "[" + ii + " " + i + "] ";
+                list.Add(new Tuple<int, int>(i, ii));
             }
-
-            this.ErrorHandler.New(moveInfo, Level.Debug);
-
-            return list;
         }
 
-        public bool IsPerpendicular()
+        this.Logger.Debug(moveInfo);
+
+        return list;
+    }
+
+    public bool IsPerpendicular()
+    {
+        return (this.fromTile.file == this.toTile.file || this.fromTile.rank == this.toTile.rank);
+    }
+
+    public bool IsDiagonal()
+    {
+        return (this.fromTile.file - this.fromTile.rank == this.toTile.file - this.toTile.rank || this.fromTile.file + this.fromTile.rank == this.toTile.file + this.toTile.rank);
+    }
+
+    public bool IsBlocked(List<Tile> list)
+    {
+        bool response = false;
+        Tile targetTile = list[list.Count - 1];
+
+        // Check if both tiles have pieces on them
+        if (targetTile.Occupied())
         {
-            return (fromFile == toFile || fromRank == toRank);
+            // Compared if existing pieces are of different color
+            if (this.fromTile.piece.color != targetTile.piece.color) return false;
         }
 
-        public bool IsDiagonal()
+        // Loop over all tiles in between a move checking if they are occupied
+        foreach (Tile tile in list)
         {
-            return (fromFile - fromRank == toFile - toRank || fromFile + fromRank == toFile + toRank);
+            // If piece is not null but type of Piece, we return true
+            if (tile.Occupied()) response = true;
         }
-
-        public void AttachErrorHandler(ErrorHandler ErrorHandler)
-        {
-            this.ErrorHandler = ErrorHandler;
-        }
+        return response;
     }
 }
