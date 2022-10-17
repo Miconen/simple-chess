@@ -1,48 +1,48 @@
-using System;
-using SimpleChess.Chessboard;
-
 namespace SimpleChess.Rules;
 
-public class Turns 
+public class Turns
 {
-    public int turnCount = 1;
-    public bool turnBool;
-    public Turns(bool turnBool)
+    public int TurnHalfmove = 1;
+    public int TurnFullmove = 1;
+    // Default to whites turn
+    private char _turnChar = 'w';
+    public bool TurnBool = true;
+
+    public void Set(char turn)
     {
-        this.turnBool = turnBool;
+        this._turnChar = turn;
+        this.TurnBool = turn switch
+        {
+            'w' => true,
+            'b' => false,
+            _ => true
+        };
     }
 
-    public void SwitchTurn() 
+    public void Next() 
     {
-        this.turnCount++;
-        if(this.turnBool) 
-        {
-            this.turnBool = false;
-            return;
-        } 
-        if(!this.turnBool) this.turnBool = true;
+        this.TurnHalfmove++;
+        // Full move rolls over after each black turn
+        if (this.TurnBool == false) this.TurnFullmove++;
+        // Flip turn
+        this.TurnBool = !this.TurnBool;
     }
 
-    public bool CheckTurn() 
+    public bool Check() 
     {
-        if(this.turnCount % 2 != 0) 
+        if(this.TurnHalfmove % 2 != 0) 
         {
-            this.turnBool = true;
-            //Console.WriteLine("White turn");
-            return this.turnBool;
+            this.TurnBool = true;
+            return this.TurnBool;
         } 
-        this.turnBool = false;
-        //Console.WriteLine("Black turn");
-        return this.turnBool;
+        this.TurnBool = false;
+        return this.TurnBool;
     }
 
     public string ToString(bool capitalize = false)
     {
-        string response = "";
-        if (this.turnBool) response = "white";
-        else response = "black";
-
-        if (capitalize) response = char.ToUpper(response[0]) + response.Substring(1);
+        var response = this.TurnBool ? "white" : "black";
+        if (capitalize) response = $"{char.ToUpper(response[0])}{response[1..]}";
         return response;
     }
 }

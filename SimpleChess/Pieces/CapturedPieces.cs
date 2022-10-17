@@ -1,5 +1,3 @@
-using SimpleChess.Rules;
-
 namespace SimpleChess.Pieces;
 
 public class CapturedPieces
@@ -17,7 +15,7 @@ public class CapturedPieces
 
         foreach (var piece in this.List)
         {
-            materialSum += piece.materialValue;
+            materialSum += piece.MaterialValue;
         }
         return materialSum;
     }

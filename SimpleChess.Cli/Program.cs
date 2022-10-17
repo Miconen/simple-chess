@@ -1,12 +1,10 @@
-﻿using SimpleChess.Cli;
+﻿namespace SimpleChess.Cli;
 
-namespace SimpleChess.Cli.Game;
-
-public class Program
+public static class Program
 {
-    static void Main(string[] args) 
+    private static void Main() 
     {
-        Game game = new Game();
+        var game = new Game();
         game.Start();
     }
 }

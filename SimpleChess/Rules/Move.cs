@@ -1,100 +1,97 @@
-using System;
-using System.Collections.Generic;
 using SimpleChess.Chessboard;
 using SimpleChess.Logging;
-using SimpleChess.Logging.Levels;
 
 namespace SimpleChess.Rules;
 
 public class Move
 {
-    public Logger Logger;
-    public Tile fromTile;
-    public Tile toTile;
+    private readonly Logger _logger;
+    public readonly Tile FromTile;
+    public readonly Tile ToTile;
 
-    public Move(Logger Logger, Tile fromTile, Tile toTile) 
+    public Move(Logger logger, Tile fromTile, Tile toTile) 
     {
-        this.Logger = Logger;
-        this.fromTile = fromTile;
-        this.toTile = toTile;
+        this._logger = logger;
+        this.FromTile = fromTile;
+        this.ToTile = toTile;
     }
 
-    public List<Tuple<int, int>> GetTileIndexesBetweenInputs()
+    public IEnumerable<Tuple<int, int>> GetTileIndexesBetweenInputs()
     {
         var list = new List<Tuple<int, int>>();
-        string moveInfo = "";
+        var moveInfo = "";
         // Vertical movement
-        if (this.fromTile.file == this.toTile.file)
+        if (this.FromTile.File == this.ToTile.File)
         {
-            moveInfo += "Vertical move, tiles visited: ";
-            int i = this.fromTile.rank;
-            while(i != this.toTile.rank)
+            moveInfo = $"{moveInfo}Vertical move, tiles visited: ";
+            var i = this.FromTile.Rank;
+            while(i != this.ToTile.Rank)
             {
-                i = (this.fromTile.rank > this.toTile.rank) ? i - 1 : i + 1;
-                moveInfo += "[" + this.fromTile.rank + " " + i + "] ";
-                list.Add(new Tuple<int, int>(i, this.fromTile.file));
+                i = (this.FromTile.Rank > ToTile.Rank) ? i - 1 : i + 1;
+                moveInfo = $"{moveInfo}[{FromTile.Rank} {i}]";
+                list.Add(new Tuple<int, int>(i, FromTile.File));
             }
         }
         // Horizontal movement
-        else if (this.fromTile.rank == this.toTile.rank)
+        else if (this.FromTile.Rank == this.ToTile.Rank)
         {
-            moveInfo += "Horizontal move, tiles visited: ";
-            int i = this.fromTile.file;
-            while(i != this.toTile.file)
+            moveInfo = $"{moveInfo}Horizontal move, tiles visited: ";
+            var i = this.FromTile.File;
+            while(i != this.ToTile.File)
             {
-                i = (this.fromTile.file > this.toTile.file) ? i - 1 : i + 1;
-                moveInfo += "[" + this.fromTile.file + " " + i + "] ";
-                list.Add(new Tuple<int, int>(this.fromTile.rank, i));
+                i = (this.FromTile.File > this.ToTile.File) ? i - 1 : i + 1;
+                moveInfo = $"{moveInfo}[{this.FromTile.File} {i}]";
+                list.Add(new Tuple<int, int>(this.FromTile.Rank, i));
             }
         }
         // Diagonal movement
         else
         {
-            moveInfo += "Diagonal move, tiles visited: ";
-            int i = this.fromTile.rank;
-            int ii = this.fromTile.file;
-            while(i != this.toTile.rank && ii != this.toTile.file)
+            moveInfo = $"{moveInfo}Diagonal move, tiles visited: ";
+            var i = this.FromTile.Rank;
+            var ii = this.FromTile.File;
+            while(i != this.ToTile.Rank && ii != this.ToTile.File)
             {
-                i = (this.fromTile.rank > this.toTile.rank) ? i - 1 : i + 1;
-                ii = (this.fromTile.file > this.toTile.file) ? ii - 1 : ii + 1;
-                moveInfo += "[" + ii + " " + i + "] ";
+                i = (this.FromTile.Rank > this.ToTile.Rank) ? i - 1 : i + 1;
+                ii = (this.FromTile.File > this.ToTile.File) ? ii - 1 : ii + 1;
+                moveInfo = $"{moveInfo}[{ii} {i}] ";
                 list.Add(new Tuple<int, int>(i, ii));
             }
         }
 
-        this.Logger.Debug(moveInfo);
+        this._logger.Debug(moveInfo);
 
         return list;
     }
 
     public bool IsPerpendicular()
     {
-        return (this.fromTile.file == this.toTile.file || this.fromTile.rank == this.toTile.rank);
+        return (this.FromTile.File == this.ToTile.File || this.FromTile.Rank == this.ToTile.Rank);
     }
 
     public bool IsDiagonal()
     {
-        return (this.fromTile.file - this.fromTile.rank == this.toTile.file - this.toTile.rank || this.fromTile.file + this.fromTile.rank == this.toTile.file + this.toTile.rank);
+        return (this.FromTile.File - this.FromTile.Rank == this.ToTile.File - this.ToTile.Rank || this.FromTile.File + this.FromTile.Rank == this.ToTile.File + this.ToTile.Rank);
     }
 
     public bool IsBlocked(List<Tile> list)
     {
-        bool response = false;
-        Tile targetTile = list[list.Count - 1];
+        var response = false;
+        var targetTile = list[^1];
 
         // Check if both tiles have pieces on them
         if (targetTile.Occupied())
         {
             // Compared if existing pieces are of different color
-            if (this.fromTile.piece.color != targetTile.piece.color) return false;
+            if (targetTile.Piece != null && FromTile.Piece != null && FromTile.Piece.Color != targetTile.Piece.Color) return false;
         }
 
         // Loop over all tiles in between a move checking if they are occupied
-        foreach (Tile tile in list)
+        foreach (var tile in list.Where(tile => !tile.Occupied()))
         {
-            // If piece is not null but type of Piece, we return true
-            if (tile.Occupied()) response = true;
+            response = true;
         }
+        
         return response;
     }
 }

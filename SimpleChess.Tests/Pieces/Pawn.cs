@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 using SimpleChess.Pieces;
@@ -9,125 +10,123 @@ namespace SimpleChess.Tests.Pieces;
 
 public class PawnTests
 {
-    public Pawn white;
-    public Pawn black;
-    public Logger logger;
+    private readonly Pawn _white = new Pawn(true);
+    private readonly Pawn _black = new Pawn(false);
+    private readonly Logger _logger = new Logger();
 
     [SetUp]
     public void Setup()
     {
-        this.logger = new Logger();
-        this.white = new Pawn(true);
-        this.black = new Pawn(false);
+        Console.WriteLine("Running pawn tests");
     }
 
     [Test]
-    public void move1FowardWhite()
+    public void Move1ForwardWhite()
     {
         var (from, to) = (new Tile(1, 1), new Tile(2, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(white.IsValidMove(move));
+        Assert.IsTrue(_white.IsValidMove(move));
     }
 
     [Test]
-    public void secondMove2ForwardWhite()
+    public void SecondMove2ForwardWhite()
     {
         var (from, to) = (new Tile(2, 1), new Tile(4, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(white.IsValidMove(move));
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsTrue(_white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 
     [Test]
-    public void secondMove2ForwardBlack()
+    public void SecondMove2ForwardBlack()
     {
         var (from, to) = (new Tile(2, 1), new Tile(0, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(black.IsValidMove(move));
-        Assert.IsFalse(black.IsValidMove(move));
+        Assert.IsTrue(_black.IsValidMove(move));
+        Assert.IsFalse(_black.IsValidMove(move));
     }
 
     [Test]
-    public void firstMove2FowardWhite()
+    public void FirstMove2ForwardWhite()
     {
         var (from, to) = (new Tile(1, 1), new Tile(3, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(white.IsValidMove(move));
+        Assert.IsTrue(_white.IsValidMove(move));
     }
 
     [Test]
-    public void moveBackwardsWhite()
+    public void MoveBackwardsWhite()
     {
         var (from, to) = (new Tile(3, 1), new Tile(2, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 
     [Test]
-    public void moveFowardBlack()
+    public void MoveForwardBlack()
     {
         var (from, to) = (new Tile(3, 1), new Tile(2, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(black.IsValidMove(move));
+        Assert.IsTrue(_black.IsValidMove(move));
     }
 
     [Test]
-    public void move2FowardBlack()
+    public void Move2ForwardBlack()
     {
         var (from, to) = (new Tile(3, 1), new Tile(1, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsTrue(black.IsValidMove(move));
+        Assert.IsTrue(_black.IsValidMove(move));
     }
 
     [Test]
-    public void moveBackwardsBlack()
+    public void MoveBackwardsBlack()
     {
         var (from, to) = (new Tile(1, 1), new Tile(2, 1));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(black.IsValidMove(move));
+        Assert.IsFalse(_black.IsValidMove(move));
     }
 
     [Test]
-    public void moveTopLeft()
+    public void MoveTopLeft()
     {
         var (from, to) = (new Tile(1, 1), new Tile(2, 0));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 
     [Test]
-    public void moveTopRight()
+    public void MoveTopRight()
     {
         var (from, to) = (new Tile(1, 1), new Tile(2, 2));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 
     [Test]
-    public void moveBottomLeft()
+    public void MoveBottomLeft()
     {
         var (from, to) = (new Tile(1, 1), new Tile(0, 0));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 
     [Test]
-    public void moveBottomRight()
+    public void MoveBottomRight()
     {
         var (from, to) = (new Tile(1, 1), new Tile(0, 2));
-        var move = new Move(this.logger, from, to);
+        var move = new Move(_logger, from, to);
 
-        Assert.IsFalse(white.IsValidMove(move));
+        Assert.IsFalse(_white.IsValidMove(move));
     }
 }
