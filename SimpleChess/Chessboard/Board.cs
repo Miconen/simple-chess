@@ -24,9 +24,9 @@ public class Board
         // Initialize two dimensional board array
         Tiles = new Tile[BoardWidth, BoardHeight];
 
-        for (int i = 7; i >= 0; i--)
+        for (var i = 7; i >= 0; i--)
         {
-            for (int ii = 0; ii < BoardWidth; ii++)
+            for (var ii = 0; ii < BoardWidth; ii++)
             {
                 Tiles[i, ii] = new Tile(i, ii);
             }
@@ -79,22 +79,23 @@ public class Board
     public void Populate(Fen fen)
     {
         var rank = 0;
-        var file = 0;
+        var file = 7;
         foreach (var piece in fen.Placement)
         {
+            Console.WriteLine($"{piece} {rank} {file}");
+            // Digits indicate x amount of empty squares
+            if (char.IsDigit(piece))
+            {
+                rank += piece - '0';
+                continue;
+            }
             // Parse through the notations formatting
             // The '/' indicates a new file
             // The rank is an index so it can never exceed 7
             if (piece == '/' || rank > 7)
             {
-                file++;
+                file--;
                 rank = 0;
-                continue;
-            }
-            // Digits indicate x amount of empty squares
-            if (char.IsDigit(piece))
-            {
-                rank += piece;
                 continue;
             }
 
