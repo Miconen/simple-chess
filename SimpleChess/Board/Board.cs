@@ -79,35 +79,54 @@ public class Board
         return turn.turnBool == false && move.toTile.rank == 0 && move.toTile.piece.ToString() == "P";
     }
 
-    public void Populate()
+    public void Populate(FEN FEN)
     {
-        for (int i = 0; i < this.BOARD_WIDTH; i++)
+        int rank = 0;
+        int file = 0;
+        foreach (char piece in FEN.Placement)
         {
-            // White pawns
-            this.Tiles[1, i].piece = new Pawn(true);
-            // Black pawns
-            this.Tiles[6, i].piece = new Pawn(false);
+            // Parse through the notations formatting
+            // The '/' indicates a new file
+            // The rank is an index so it can never exceed 7
+            if (piece == '/' || rank > 7)
+            {
+                file++;
+                rank = 0;
+                continue;
+            }
+            // Digits indicate x amount of empty squares
+            if (Char.IsDigit(piece))
+            {
+                rank += piece;
+                continue;
+            }
+
+            // Populate tile with piece corresponding to the character
+            bool IsWhite = Char.IsUpper(piece);
+            switch (Char.ToUpper(piece))
+            {
+                case 'P':
+                    this.Tiles[file, rank].piece = new Pawn(IsWhite);
+                    break;
+                case 'R':
+                    this.Tiles[file, rank].piece = new Rook(IsWhite);
+                    break;
+                case 'N':
+                    this.Tiles[file, rank].piece = new Knight(IsWhite);
+                    break;
+                case 'B':
+                    this.Tiles[file, rank].piece = new Bishop(IsWhite);
+                    break;
+                case 'Q':
+                    this.Tiles[file, rank].piece = new Queen(IsWhite);
+                    break;
+                case 'K':
+                    this.Tiles[file, rank].piece = new King(IsWhite);
+                    break;
+            }
+
+            rank++;
         }
-
-        // White pieces
-        this.Tiles[0, 0].piece = new Rook(true);
-        this.Tiles[0, 1].piece = new Knight(true);
-        this.Tiles[0, 2].piece = new Bishop(true);
-        this.Tiles[0, 3].piece = new Queen(true);
-        this.Tiles[0, 4].piece = new King(true);
-        this.Tiles[0, 5].piece = new Bishop(true);
-        this.Tiles[0, 6].piece = new Knight(true);
-        this.Tiles[0, 7].piece = new Rook(true);
-
-        // Black pieces
-        this.Tiles[7, 0].piece = new Rook(false);
-        this.Tiles[7, 1].piece = new Knight(false);
-        this.Tiles[7, 2].piece = new Bishop(false);
-        this.Tiles[7, 3].piece = new Queen(false);
-        this.Tiles[7, 4].piece = new King(false);
-        this.Tiles[7, 5].piece = new Bishop(false);
-        this.Tiles[7, 6].piece = new Knight(false);
-        this.Tiles[7, 7].piece = new Rook(false);
     }
 
     public bool InBounds(char fileLetter, int rank)

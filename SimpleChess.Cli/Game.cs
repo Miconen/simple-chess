@@ -17,17 +17,18 @@ public class Game
     public Turns turn;
     public CapturedPieces WhiteCapturedPieces;
     public CapturedPieces BlackCapturedPieces;
+    public FEN FEN;
 
     public Game()
     {
         this.Logger = new Logger();
+        this.FEN = new FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         this.board = new Board(this.Logger);
-        this.board.Populate();
+        this.board.Populate(FEN);
+        this.Renderer = new BoardRenderer(this.board);
         this.turn = new Turns(true);
         this.WhiteCapturedPieces = new CapturedPieces();
         this.BlackCapturedPieces = new CapturedPieces();
-
-        this.Renderer = new BoardRenderer(this.board);
     }
 
     public void Start()
@@ -122,7 +123,6 @@ public class Game
         if (this.turn.turnBool == true) return ref this.WhiteCapturedPieces.List;
         else return ref this.BlackCapturedPieces.List;
     }
-
 
     private (char file, int rank) _getValidInput(string message)
     {
