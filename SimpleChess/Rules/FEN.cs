@@ -4,28 +4,32 @@
 */
 namespace SimpleChess.Rules;
 
-public class FEN
+public class Fen
 {
-    public string Placement { get; set; }
-    public string Turn { get; set; }
+    public string Placement { get; private set; }
+    public readonly Turns Turn = new();
     public string Castling { get; set; }
     public string EnPassantSquare { get; set; }
-    public string ClockHalfmove { get; set; }
-    public string ClockFullmove { get; set; }
 
-    public FEN(string FENString)
+    public Fen(string fenString)
     {
-        this.Update(FENString);
+        var fenHelper = fenString.Split(" ") ?? throw new ArgumentNullException(nameof(fenString));
+        this.Placement = fenHelper[0];
+        this.Castling = fenHelper[2];
+        this.EnPassantSquare = fenHelper[3];
+        this.Turn.Set(fenHelper[1][0]);
+        this.Turn.TurnHalfmove = Convert.ToInt32(fenHelper[4]);
+        this.Turn.TurnFullmove = Convert.ToInt32(fenHelper[5]);
     }
 
-    public void Update(string FENString)
+    private void Update(string fenString)
     {
-        string[] _fenHelper = FENString.Split(" ");
-        this.Placement = _fenHelper[0];
-        this.Turn = _fenHelper[1];
-        this.Castling = _fenHelper[2];
-        this.EnPassantSquare = _fenHelper[3];
-        this.ClockHalfmove = _fenHelper[4];
-        this.ClockFullmove = _fenHelper[5];
+        var fenHelper = fenString.Split(" ") ?? throw new ArgumentNullException(nameof(fenString));
+        this.Placement = fenHelper[0];
+        this.Castling = fenHelper[2];
+        this.EnPassantSquare = fenHelper[3];
+        this.Turn.Set(fenHelper[1][0]);
+        this.Turn.TurnHalfmove = Convert.ToInt32(fenHelper[4]);
+        this.Turn.TurnFullmove = Convert.ToInt32(fenHelper[5]);
     }
 }

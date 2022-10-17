@@ -1,4 +1,3 @@
-using System;
 using SimpleChess.Chessboard;
 using SimpleChess.Rules;
 
@@ -6,21 +5,21 @@ namespace SimpleChess.Pieces;
 
 public abstract class Piece
 {
-    public bool color;
-    public char nameShort;
+    public bool Color;
+    public char NameShort;
     // Can the piece go through/over other pieces?
-    public bool ghosting;
-    public int materialValue;
+    public bool Ghosting;
+    public int MaterialValue;
 
-    public Piece()
+    protected Piece()
     {
         // By default don't allow pieces to traverse through others
-        this.ghosting = false;
+        this.Ghosting = false;
     }
 
     public bool IsWhite()
     {
-        return this.color;
+        return this.Color;
     }
 
     public bool IsBlack()
@@ -30,11 +29,10 @@ public abstract class Piece
 
     public string GetColor(bool capitalize = false)
     {
-        string response = "";
-        if (this.color) response = "white";
-        else response = "black";
+        var response = "";
+        response = this.Color ? "white" : "black";
 
-        if (capitalize) response = char.ToUpper(response[0]) + response.Substring(1);
+        if (capitalize) response = $"{char.ToUpper(response[0])}{response[1..]}";
         return response;
     }
 
@@ -43,36 +41,15 @@ public abstract class Piece
         return true;
     }
 
-    /* public bool IsBlocked(List<Tile> list) */
-    /* { */
-    /*     bool response = false; */
-    /*     Tile targetTile = list[list.Count - 1]; */
-
-    /*     // Check if both tiles have pieces on them */
-    /*     if (targetTile.Occupied()) */
-    /*     { */
-    /*         // Compared if existing pieces are of different color */
-    /*         if (this.color != targetTile.piece.color) return false; */
-    /*     } */
-
-    /*     // Loop over all tiles in between a move checking if they are occupied */
-    /*     foreach (Tile tile in list) */
-    /*     { */
-    /*         // If piece is not null but type of Piece, we return true */
-    /*         if (tile.Occupied()) response = true; */
-    /*     } */
-    /*     return response; */
-    /* } */
-
     public override string ToString()
     {
-        return Char.ToString(this.nameShort);
+        return char.ToString(this.NameShort);
     }
 
     public virtual bool[,] GetValidMoves(Tile tile, Tile[,] board)
     {
         // Initialize two dimensional bool array
-        bool[,] response = new bool[8, 8];
+        var response = new bool[8, 8];
 
         return response;
     }

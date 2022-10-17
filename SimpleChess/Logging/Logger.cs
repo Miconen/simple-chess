@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using SimpleChess.Logging.Levels;
-
 namespace SimpleChess.Logging;
 
 public class Logger
 {
-    public Level Level;
-    private List<string> _buffer;
-    private List<string> _printBuffer;
+    private Level _level;
+    private readonly List<string> _buffer;
+    private readonly List<string> _printBuffer;
 
     public Logger()
     {
@@ -17,7 +13,7 @@ public class Logger
         // List of only the errors we are going to print
         this._printBuffer = new List<string>();
         // By default don't show any errors or warnings
-        this.Level = Level.None;
+        this._level = Level.None;
     }
 
     public void ToggleDebug() { _toggleLevel(Level.Debug); }
@@ -71,7 +67,7 @@ public class Logger
 
     public bool IsEmpty()
     {
-        return (this._buffer.Count == 0) ? true : false;
+        return _buffer.Count == 0;
     }
 
     public void Write()
@@ -92,17 +88,17 @@ public class Logger
 
     private void _addLevel(Level severity)
     {
-        this.Level = (this.Level | severity);
+        this._level = (this._level | severity);
     }
 
     private void _removeLevel(Level severity)
     {
-        this.Level = (this.Level & (~severity));
+        this._level = (this._level & (~severity));
     }
 
     private bool _checkLevel(Level severity)
     {
-        return (this.Level & severity) != 0;
+        return (this._level & severity) != 0;
     }
 
     private void _printDebugMessage(Level severity, string message)

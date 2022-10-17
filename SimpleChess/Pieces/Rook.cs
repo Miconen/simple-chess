@@ -7,55 +7,54 @@ public class Rook : Piece
 {
     public Rook(bool color)
     {
-        this.color = color;
-        this.nameShort = 'R';
-        this.materialValue = 5;
+        Color = color;
+        NameShort = 'R';
+        MaterialValue = 5;
     }
 
     public override bool IsValidMove(Move move)
     {
-        if (!move.IsPerpendicular()) return false;
-        return true;
+        return move.IsPerpendicular();
     }
 
     public override bool[,] GetValidMoves(Tile tile, Tile[,] board)
     {
-        int x = tile.rank;
-        int y = tile.file;
+        var x = tile.Rank;
+        var y = tile.File;
 
         // Initialize two dimensional bool array
-        bool[,] response = new bool[8, 8];
+        var response = new bool[8, 8];
 
         // Check up
-        for (int i = x + 1; i < 8; i++)
+        for (var i = x + 1; i < 8; i++)
         {
-            bool IsValid = _validMoveHelper(board[i, y]);
-            if (!IsValid) break;
-            response[i, y] = IsValid;
+            var isValid = _validMoveHelper(board[i, y]);
+            if (!isValid) break;
+            response[i, y] = isValid;
         }
 
         // Check down 
-        for (int i = x - 1; i >= 1; i--)
+        for (var i = x - 1; i >= 1; i--)
         {
-            bool IsValid = _validMoveHelper(board[i, y]);
-            if (!IsValid) break;
-            response[i, y] = IsValid;
+            var isValid = _validMoveHelper(board[i, y]);
+            if (!isValid) break;
+            response[i, y] = isValid;
         }
 
         // Check right 
-        for (int i = y + 1; i < 8; i++)
+        for (var i = y + 1; i < 8; i++)
         {
-            bool IsValid = _validMoveHelper(board[x, i]);
-            if (!IsValid) break;
-            response[x, i] = IsValid;
+            var isValid = _validMoveHelper(board[x, i]);
+            if (!isValid) break;
+            response[x, i] = isValid;
         }
 
         // Check left 
-        for (int i = y - 1; i >= 0; i--)
+        for (var i = y - 1; i >= 0; i--)
         {
-            bool IsValid = _validMoveHelper(board[x, i]);
-            if (!IsValid) break;
-            response[x, i] = IsValid;
+            var isValid = _validMoveHelper(board[x, i]);
+            if (!isValid) break;
+            response[x, i] = isValid;
         }
 
         return response;
@@ -63,8 +62,7 @@ public class Rook : Piece
 
     private bool _validMoveHelper(Tile tile)
     {
-        bool response = true;
-        if (tile.Occupied()) response = false;
-        return response;
+        // TODO: Add more checks
+        return !tile.Occupied();
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using SimpleChess.Rules;
 using SimpleChess.Chessboard;
 
@@ -8,31 +7,29 @@ public class Knight : Piece
 {
     public Knight(bool color)
     {
-        this.color = color;
-        this.nameShort = 'N';
-        this.ghosting = true;
-        this.materialValue = 3;
+        this.Color = color;
+        this.NameShort = 'N';
+        this.Ghosting = true;
+        this.MaterialValue = 3;
     }
 
     public override bool IsValidMove(Move move)
     {
         // Determine smaller (min) and bigger (max) value from inputs
-        int min = Math.Min(move.fromTile.rank - move.toTile.rank, move.fromTile.file - move.toTile.file);
-        int max = Math.Max(move.fromTile.rank - move.toTile.rank, move.fromTile.file - move.toTile.file);
+        var min = Math.Min(move.FromTile.Rank - move.ToTile.Rank, move.FromTile.File - move.ToTile.File);
+        var max = Math.Max(move.FromTile.Rank - move.ToTile.Rank, move.FromTile.File - move.ToTile.File);
 
         // If inputs form an L shape move, count as valid move
-        if (Math.Abs(min) == 1 && Math.Abs(max) == 2) return true;
-        if (Math.Abs(min) == 2 && Math.Abs(max) == 1) return true;
-        return false;
+        return Math.Abs(min) == 1 && Math.Abs(max) == 2 || Math.Abs(min) == 2 && Math.Abs(max) == 1;
     }
 
     public override bool[,] GetValidMoves(Tile tile, Tile[,] board)
     {
-        int x = tile.rank;
-        int y = tile.file;
+        var x = tile.Rank;
+        var y = tile.File;
 
         // Initialize two dimensional bool array
-        bool[,] response = new bool[8, 8];
+        var response = new bool[8, 8];
 
         var knightHelper = new(int x, int y) [] {
             (2, 1),
@@ -48,8 +45,8 @@ public class Knight : Piece
         // Check offset coordinates 
         foreach (var offset in knightHelper)
         {
-            int newX = x + offset.x;
-            int newY = y + offset.y;
+            var newX = x + offset.x;
+            var newY = y + offset.y;
 
             // Prevent index out of bounds errors
             if (newX < 0 || newY < 0) continue;

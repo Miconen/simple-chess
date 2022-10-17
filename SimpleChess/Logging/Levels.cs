@@ -1,4 +1,4 @@
-namespace SimpleChess.Logging.Levels {
+namespace SimpleChess.Logging {
     [Flags]
     public enum Level {
         None = 0,
